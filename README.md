@@ -2,12 +2,11 @@
 
 Group Members:
 
-Jason Manarroo 100825106
-Jordan Hagedorn 100828122
-
-John __
-William __
-Trent __
+- Jason Manarroo 100825106
+- Jordan Hagedorn 100828122
+- John 100785128
+- William __
+- Trent __
 
 
 
