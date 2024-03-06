@@ -5,7 +5,7 @@ Group Members:
 - Jason Manarroo 100825106
 - Jordan Hagedorn 100828122
 - John 100785128
-- William __
+- William Zdenek Chamberlain 100846922
 - Trent __
 
 
