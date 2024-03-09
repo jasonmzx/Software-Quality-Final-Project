@@ -6,7 +6,7 @@ Group Members:
 - Jordan Hagedorn 100828122
 - John 100785128
 - William Zdenek Chamberlain 100846922
-- Trent __
+- Trent Jordan 100831853
 
 
 
