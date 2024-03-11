@@ -1,13 +1,15 @@
 package com.ontariotechu.sofe3980U;
 
-//import com.ontariotechu.sofe3980U.HelloController;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
+import org.junit.runner.RunWith;
 
 import org.junit.*;
 import org.junit.runner.*;
@@ -22,26 +24,17 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(HelloController.class)
-public class HelloControllerTest {
+@WebMvcTest(BookingViewController.class)
+public class BookingViewControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
    
     @Test
     public void getDefault() throws Exception {
-        this.mvc.perform(get("/hello"))
-		.andExpect(status().isOk())
-		.andExpect(view().name("hello"))
-		.andExpect(model().attribute("name", "World"));
+        this.mvc.perform(get("/"))//.andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(view().name("booking_view"));
     }
-	
-    @Test
-    public void helloWithName() throws Exception {
-        this.mvc.perform(get("/hello?name=Doe"))
-		.andExpect(status().isOk())
-		.andExpect(view().name("hello"))
-		.andExpect(model().attribute("name", "Doe"));
-    }
+
 }

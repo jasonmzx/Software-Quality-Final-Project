@@ -24,10 +24,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-
 @RunWith(SpringRunner.class)
-@WebMvcTest(BinaryAPIController.class)
-public class BinaryAPIControllerTest {
+@WebMvcTest(BookingAPIController.class)
+public class BookingAPIControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -35,17 +34,9 @@ public class BinaryAPIControllerTest {
    
     @Test
     public void add() throws Exception {
-        this.mvc.perform(get("/add").param("operand1","111").param("operand2","1010"))//.andDo(print())
+        this.mvc.perform(get("/bookadd").param("operand1","hello").param("operand2","world"))//.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().string("10001"));
+            .andExpect(content().string("helloworld"));
     }
-	@Test
-    public void add2() throws Exception {
-        this.mvc.perform(get("/add_json").param("operand1","111").param("operand2","1010"))//.andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.operand1").value(111))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.operand2").value(1010))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.result").value(10001))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.operator").value("add"));
-    }
+
 }

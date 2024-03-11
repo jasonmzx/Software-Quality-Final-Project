@@ -7,13 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class HelloController {
+public class BookingViewController {
 
-	@GetMapping("/hello")
+	@GetMapping("/")
 	public String home(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
 		
 		model.addAttribute("name", name);
 		
-		return "hello";
+		return "booking_view";
 	}
+
 }
