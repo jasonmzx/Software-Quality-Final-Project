@@ -1,7 +1,15 @@
 package com.ontariotechu.sofe3980U.core;
 
 import org.junit.Test;
+
+import com.ontariotechu.sofe3980U.booking.Trip;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class PathFinderTest {
@@ -84,5 +92,24 @@ public class PathFinderTest {
         Airport airporta = new Airport("YYZ", "America/Toronto", 0);
         DowDate date2 = new DowDate(1, LocalDateTime.now());
         PathFinder.pathFind(null, null, airporta, date2, date2);
+    }
+
+    @Test
+    public static void properPath() {
+        Airport airporta = new Airport("YYZ", "America/Toronto", 0);
+        Airport airportb = new Airport("NYC", "America/NewYork", 3);
+        DowDate date = new DowDate(0, LocalDateTime.now());
+        DowDate date2 = new DowDate(1, LocalDateTime.now());
+        Trip trip = PathFinder.pathFind(MemoryStore.getInstance(), airporta, airportb, date, date2);
+        assertNotNull(trip);
+        List<Flight> visited = new ArrayList<Flight>();
+        for (Flight f : trip.getJourney()) {
+            if (!visited.isEmpty())
+                assertFalse(visited.getLast().arrivalDate.DayTime.isAfter(f.departDate.DayTime));
+            assertFalse(visited.contains(f));
+            visited.add(f);
+        }
+        assertFalse(trip.getJourney().getFirst().departDate.DayTime.isBefore(date.DayTime));
+        assertFalse(trip.getJourney().getLast().arrivalDate.DayTime.isAfter(date2.DayTime));
     }
 }

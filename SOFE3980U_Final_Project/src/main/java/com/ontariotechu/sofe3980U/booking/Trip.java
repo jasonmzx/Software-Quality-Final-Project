@@ -16,4 +16,8 @@ public class Trip {
         this.departureDay = departureDay;
         this.journey = journey;
     }
+
+    public ArrayList<Flight> getJourney() {
+        return this.journey;
+    }
 }
