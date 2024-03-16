@@ -31,4 +31,8 @@ public class MemoryStore {
         return airportsList;
     }
 
+    public List<Flight> getFlightsList() {
+        return null;
+    }
+
 }
