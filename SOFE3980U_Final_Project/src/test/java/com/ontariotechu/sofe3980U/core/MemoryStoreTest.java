@@ -14,7 +14,7 @@ import org.springframework.test.annotation.Repeat;
 public class MemoryStoreTest {
     @Repeat(5)
     @Test
-    public static void getInstanceTest() {
+    public void getInstanceTest() {
         MemoryStore store = MemoryStore.getInstance();
         assertNotEquals(store, null);
         assertEquals(MemoryStore.class, store);
@@ -22,12 +22,12 @@ public class MemoryStoreTest {
 
     @Repeat(5)
     @Test
-    public static void getInstanceMatchTest() {
+    public void getInstanceMatchTest() {
         assertEquals(MemoryStore.getInstance(), MemoryStore.getInstance());
     }
 
     @Test
-    public static void getFlightsTest() {
+    public void getFlightsTest() {
         List<Flight> flights = MemoryStore.getInstance().getFlightsList();
         assertNotEquals(null, flights);
         assertFalse(flights.isEmpty());
@@ -41,7 +41,7 @@ public class MemoryStoreTest {
     }
 
     @Test
-    public static void getAriportTest() {
+    public void getAriportTest() {
         List<Airport> airports = MemoryStore.getInstance().getAirportList();
         assertNotNull(airports);
         assertFalse(airports.isEmpty());
