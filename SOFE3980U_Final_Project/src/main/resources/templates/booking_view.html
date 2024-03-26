@@ -110,8 +110,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
     <script>
-        //Init DOM stuff:
-        
+        // Initialize DOM elements
         let SearchFlight_ERROR_BOX = document.getElementById("searchFlightErrorMsg");
         SearchFlight_ERROR_BOX.style.visibility = "hidden";
 
@@ -146,22 +145,38 @@
                     url: '/search_flights', // Update this URL if your API endpoint is different
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
-                    success: function(response) {
-                        // Log the response from the server
-                        
-                        SearchFlight_ERROR_BOX.style.visibility = "visible";
-                        SearchFlight_ERROR_BOX.innerHTML = `${response}`;
-                        
+                    statusCode: {
+                        200: function(response) {
+                            // Handle 200 OK
+                            // Optionally hide the error box or show a success message
+                            SearchFlight_ERROR_BOX.style.visibility = "visible";
+                            SearchFlight_ERROR_BOX.innerHTML = "Success: " + response;
+                            SearchFlight_ERROR_BOX.classList.remove("alert-danger");
+                            SearchFlight_ERROR_BOX.classList.add("alert-success");
+                        },
+                        400: function(error) {
+                            // Handle 400 Bad Request
+                            SearchFlight_ERROR_BOX.style.visibility = "visible";
+                            SearchFlight_ERROR_BOX.innerHTML = "Error: " + error.responseText;
+                            SearchFlight_ERROR_BOX.classList.remove("alert-success");
+                            SearchFlight_ERROR_BOX.classList.add("alert-danger");
+                        }
                     },
                     error: function(xhr, status, error) {
-                        // Handle any errors here
-                        console.log('Error:', error);
+                        // Handle any other errors here
+                        if (xhr.status !== 400) { // Avoid double handling
+                            console.log('Error:', error);
+                            SearchFlight_ERROR_BOX.style.visibility = "visible";
+                            SearchFlight_ERROR_BOX.innerHTML = "An unexpected error occurred. Please try again.";
+                            SearchFlight_ERROR_BOX.classList.remove("alert-success");
+                            SearchFlight_ERROR_BOX.classList.add("alert-danger");
+                        }
                     }
                 });
             });
         });
     </script>
-
+    
 
 </body>
 </html>
