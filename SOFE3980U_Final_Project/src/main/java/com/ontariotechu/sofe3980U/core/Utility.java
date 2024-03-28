@@ -3,6 +3,8 @@ package com.ontariotechu.sofe3980U.core;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
+
 public abstract class Utility {
     public static LocalDate parseDate(String dateString, String format) {
         // Create a formatter using the given format
@@ -12,8 +14,14 @@ public abstract class Utility {
         return LocalDate.parse(dateString, formatter);
     }
 
-    public static int validateRequest(LocalDate departureDate, int departureAirport, int arrivalAirport,
-            boolean roundTrip, LocalDate returnDate) {
+    public static int validateRequest(FlightSearchDTO searchParameters) {
+
+    LocalDate departureDate = searchParameters.getDepartureDateParsed();
+    int departureAirport = searchParameters.getDepartureAirport();
+    int arrivalAirport = searchParameters.getArrivalAirport();
+    boolean roundTrip = searchParameters.getRoundTrip();
+    LocalDate returnDate = searchParameters.getReturnDateParsed();
+
         
         // Ensure departure and arrival airports are not the same
         if (departureAirport == arrivalAirport) {

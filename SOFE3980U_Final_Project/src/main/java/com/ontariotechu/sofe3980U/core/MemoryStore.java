@@ -68,11 +68,12 @@ public class MemoryStore {
         DowDate departDate = new DowDate(0,time1530);
         DowDate arrivalDate= new DowDate(0, time1730);
 
-        flightNetworkList.add(new Flight(airportsList.get(0), airportsList.get(1), departDate,arrivalDate));
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDate,arrivalDate));
 
         DowDate departDate2 = new DowDate(0,time0615);
         DowDate arrivalDate2= new DowDate(0, time0930);
 
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(2), departDate2,arrivalDate2));
 
 
     }

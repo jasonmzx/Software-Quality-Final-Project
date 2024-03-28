@@ -1,10 +1,6 @@
 package com.ontariotechu.sofe3980U.core;
 
-// Core Imports
-
 import com.ontariotechu.sofe3980U.core.MemoryStore;
-
-// std imports
 
 import java.util.List;
 import java.util.Set;
@@ -18,6 +14,8 @@ import org.springframework.test.annotation.Repeat;
 
 public class MemoryStoreTest {
 
+    //Airport Tests (Data Integrity Tests)
+
     @Test
     public void testUniqueAirportIDs() {
         List<Airport> airports = MemoryStore.getInstance().getAirportList();
@@ -30,5 +28,10 @@ public class MemoryStoreTest {
             ids.add(airport.getID());
         }
     }
+
+    //Flight Network Tests (Data Integrity Tests)
+
+
+    //TODO
 
 }

@@ -53,23 +53,17 @@ public class BookingAPIController {
 
         System.out.println(formattedParams);
         //! DEBUG --- Format the parameters for display or further processing ^^^
-                
-        LocalDate parsedDepartureDate = Utility.parseDate(searchParameters.getDepartureDate(), "MM/dd/yyyy");
-        LocalDate parsedReturnDate = null;
-
-        if (searchParameters.getReturnDate() != null) { // If the return date is not null, it's a round trip!
-            parsedReturnDate = Utility.parseDate(searchParameters.getReturnDate(), "MM/dd/yyyy");
-        }
 
         // * Assertions */
         try {
-            Utility.validateRequest(parsedDepartureDate, searchParameters.getDepartureAirport(),
-                    searchParameters.getArrivalAirport(), searchParameters.getRoundTrip(), parsedReturnDate);
+            Utility.validateRequest(searchParameters);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST); // Return a 400 status
         }
 
         // If validation passes, return a 200 status
+
+
 
         //Get JSON-Ified List of flights
 
