@@ -1,13 +1,13 @@
 package com.ontariotechu.sofe3980U.core;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class DowDate {
     int DoW;
-    LocalDateTime DayTime;
+    LocalTime DayTime;
 
     //Constructor
-    public DowDate(int DoW, LocalDateTime time) {
+    public DowDate(int DoW, LocalTime time) {
         this.DoW = DoW;
         this.DayTime = time;
     }
