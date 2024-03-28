@@ -4,7 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MemoryStore {
 
@@ -87,12 +91,29 @@ public class MemoryStore {
 
     // -------------- Getters & Setters ---------------------------
 
-        public List<Airport> getAirportList() {
+    public List<Airport> getAirportList() {
         return airportsList;
     }
 
     public List<Flight> getFlightsList() {
-        return null;
+        return flightNetworkList;
+    }
+
+    public Map<Integer, List<Flight>> getSortedFlights() {
+        
+        Map<Integer, List<Flight>> outputMap = new HashMap<Integer, List<Flight>>();
+
+        for (Flight flight : flightNetworkList) {
+            // place in Dictionary at key = flight.getStart().getID()
+        }
+
+        // Now iterate through the map with a for-each loop
+        for (Map.Entry<Integer, List<Flight>> flightList : outputMap.entrySet()) {
+            Integer key = flightList.getKey();
+            List<Flight> value = flightList.getValue();
+
+            
+        }
     }
 
 }
