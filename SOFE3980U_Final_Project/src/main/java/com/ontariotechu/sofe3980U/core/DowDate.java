@@ -35,4 +35,12 @@ public class DowDate {
     public void setDayTime(LocalTime DayTime) {
         this.DayTime = DayTime;
     }
+
+    public boolean isAfter(DowDate comparer) {
+
+        if (this.DoW > comparer.DoW) {
+            return true;
+        }
+        return this.DayTime.isAfter(comparer.DayTime);
+    }
 }
