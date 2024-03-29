@@ -21,6 +21,7 @@ public class FlightSearchDTO {
     }
 
     public void setDepartureDate(String departureDate) {
+        //parseDep(departureDate); DONT UNCOMMENT , THIS BREAKS JSON PARSING
         this.departureDate = departureDate;
     }
 
@@ -53,6 +54,7 @@ public class FlightSearchDTO {
     }
 
     public void setReturnDate(String returnDate) {
+        //parseRet(returnDate); DONT UNCOMMENT , THIS BREAKS JSON PARSING
         this.returnDate = returnDate;
     }
 
