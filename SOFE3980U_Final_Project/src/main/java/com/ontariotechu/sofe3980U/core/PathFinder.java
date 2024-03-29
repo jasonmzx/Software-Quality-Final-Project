@@ -3,6 +3,7 @@ package com.ontariotechu.sofe3980U.core;
 import com.ontariotechu.sofe3980U.booking.Booking;
 import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
 
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,47 +20,44 @@ public class PathFinder {
 
     }
 
-    // Placeholder for the pathFind function
+    // Find flight paths for a booking
     public static List<List<Flight>> pathFind(Airport start, Airport end, DowDate departAfter) {
-        // Implementation goes here
-        //throw new UnsupportedOperationException("Path finding not implemented yet.");
-
         List<List<Flight>> allPaths = new ArrayList<>();
         List<Flight> currentPath = new ArrayList<>();
-        findFlightsRecursive(start, end, departAfter, currentPath, allPaths);
+        Map<Integer, List<Flight>> flightsMap = MemoryStore.getInstance().getSortedFlights();
+        findFlightsRecursive(flightsMap, start, end, departAfter, currentPath, allPaths);
         return allPaths;
     }
 
-    private static void findFlightsRecursive(Airport current, Airport end, DowDate departAfter, List<Flight> currentPath, List<List<Flight>> allPaths) {
+    // Find flight paths recursively (DFS)
+    private static void findFlightsRecursive(Map<Integer, List<Flight>> flightsMap, Airport current, Airport end, DowDate departAfter, List<Flight> currentPath, List<List<Flight>> allPaths) {
         if (current.equals(end)) {
-            // Reached destination, add a copy of currentPath to allPaths
+            //reached destination, add a copy of currentPath to allPaths
             allPaths.add(new ArrayList<>(currentPath));
             return;
         }
 
-        List<Flight> nextFlights = getNextFlights(current, departAfter);
+        List<Flight> nextFlights = getNextFlights(flightsMap, current, departAfter);
 
         for (Flight flight : nextFlights) {
-            if (flight.getDepartDate().isAfter(departAfter)) {
-                currentPath.add(flight); // Add current flight to path
-                findFlightsRecursive(flight.getDestination(), end, flight.getArrivalDate(), currentPath, allPaths);
-                currentPath.remove(currentPath.size() - 1); // Remove last flight from path (backtrack)
-            }
+            currentPath.add(flight); //add current flight to path
+            findFlightsRecursive(flightsMap, flight.getDestination(), end, flight.getArrivalDate(), currentPath, allPaths);
+            currentPath.remove(currentPath.size() - 1); //remove last flight from path (backtrack)
         }
     }
 
-    private static List<Flight> getNextFlights(Airport current, DowDate afterTime) {
-        // Implementation to get next possible flights from `current` airport after `afterTime`
-        // This would involve filtering the stored flights in MemoryStore based on these conditions
+    private static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
         
-        List<Flight> flightsList = MemoryStore.getInstance().getSortedFlights();
+        //get flights starting from currentAirport
+        List<Flight> flightsList = flightsMap.get(currentAirport.getID());
 
         for (Flight flight : flightsList) {
-            if (flight.getDepartDate().isAfter(afterTime)) {
-                
+            //if flight departure <= afterTime, remove flight from list
+            if(flight.getDepartDate().compareTo(afterTime) <= 0) {
+                flightsList.remove(flight);
             }
         }
 
-        return new ArrayList<>(); // Placeholder for actual implementation
+        return flightsList;
     }
 }
