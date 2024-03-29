@@ -64,16 +64,59 @@ public class MemoryStore {
         LocalTime time0615 = LocalTime.of(6, 15);
         LocalTime time0930 = LocalTime.of(9, 30);
 
+        DowDate departDateSunAM = new DowDate(0,time0615);
+        DowDate arrivalDate2SunAM = new DowDate(0, time0930);
 
-        DowDate departDate = new DowDate(0,time1530);
-        DowDate arrivalDate= new DowDate(0, time1730);
+        DowDate departDateSunPM = new DowDate(0,time1530);
+        DowDate arrivalDateSunPM = new DowDate(0, time1730);
 
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDate,arrivalDate));
+        Dow departDateMonAM =  new DowDate(1, time0615);
+        DowDate arrivalDateMonAM = new DowDate(1, time0930);
 
-        DowDate departDate2 = new DowDate(0,time0615);
-        DowDate arrivalDate2= new DowDate(0, time0930);
+        DowDate departDateMonPM = new DowDate(1,time1530);
+        DowDate arrivalDateMonPM = new DowDate(1, time1730);
 
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(2), departDate2,arrivalDate2));
+        Dow departDateTueAM =  new DowDate(2, time0615);
+        DowDate arrivalDateTueAM = new DowDate(2, time0930);
+
+        DowDate departDateTuePM = new DowDate(2,time1530);
+        DowDate arrivalDateTuePM = new DowDate(2, time1730);
+
+        Dow departDateWedAM =  new DowDate(3, time0615);
+        DowDate arrivalDateWedAM = new DowDate(3, time0930);
+
+        DowDate departDateWedPM = new DowDate(3,time1530);
+        DowDate arrivalDateWedPM = new DowDate(3, time1730);
+
+        Dow departDateThuAM =  new DowDate(4, time0615);
+        DowDate arrivalDateThuAM = new DowDate(4, time0930);
+
+        DowDate departDateThuPM = new DowDate(4,time1530);
+        DowDate arrivalDateThuPM = new DowDate(4, time1730);
+
+        Dow departDateFriAM =  new DowDate(5, time0615);
+        DowDate arrivalDateFriAM = new DowDate(5, time0930);
+
+        DowDate departDateFriPM = new DowDate(5,time1530);
+        DowDate arrivalDateFriPM = new DowDate(5, time1730);
+
+        Dow departDateSatAM =  new DowDate(6, time0615);
+        DowDate arrivalDateSatAM = new DowDate(6, time0930);
+
+        DowDate departDateSatPM = new DowDate(6,time1530);
+        DowDate arrivalDateSatPM = new DowDate(6, time1730);
+
+        //TOR to NYC
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateSunPM,arrivalDateSatPM));
+
+        //TOR to LA
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(2), departDateSunPM,arrivalDate2SunAM));
+
+        //TOR to CHI
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(3), departDateMonAM,arrivalDateMonAM));
+
+        //CHI to LA
+        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(2), departDateMonPM,arrivalDateMonPM));
 
 
     }
