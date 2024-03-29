@@ -1,10 +1,12 @@
 package com.ontariotechu.sofe3980U.core;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MemoryStore {
 
@@ -130,12 +132,49 @@ public class MemoryStore {
 
     // -------------- Getters & Setters ---------------------------
 
-        public List<Airport> getAirportList() {
+    public List<Airport> getAirportList() {
         return airportsList;
     }
 
     public List<Flight> getFlightsList() {
-        return null;
+        return flightNetworkList;
+    }
+
+    public Map<Integer, List<Flight>> getSortedFlights() {
+        
+        Map<Integer, List<Flight>> outputMap = new HashMap<Integer, List<Flight>>();
+
+        //sort flight into hash map based on starting airport
+        for (Flight flight : flightNetworkList) {
+
+            if (outputMap.containsKey(flight.getStart().getID())) {
+                //add current flight to pre-existing list in hashmap
+                outputMap.get(flight.getStart().getID()).add(flight);
+            }
+            else {
+                List<Flight> new_key_list = new ArrayList<>();
+                new_key_list.add(flight);
+                //add new list in hash map with current flight
+                outputMap.put(flight.getStart().getID(), new_key_list);
+            }
+        }
+
+        //iterate through the map with a for-each loop
+        for (Map.Entry<Integer, List<Flight>> flightListEntry : outputMap.entrySet()) {
+            
+            //get list of flights
+            List<Flight> flightList = flightListEntry.getValue();
+            
+            //sort list of flights
+            Collections.sort(flightList, new Comparator<Flight>() {
+                @Override
+                public int compare(Flight f1, Flight f2) {
+                    return f1.getDepartDate().compareTo(f2.getDepartDate());
+                }
+            });
+        }
+
+        return outputMap;
     }
 
 }
