@@ -72,37 +72,37 @@ public class MemoryStore {
         DowDate departDateSunPM = new DowDate(0,time1530);
         DowDate arrivalDateSunPM = new DowDate(0, time1730);
 
-        Dow departDateMonAM =  new DowDate(1, time0615);
+        DowDate departDateMonAM =  new DowDate(1, time0615);
         DowDate arrivalDateMonAM = new DowDate(1, time0930);
 
         DowDate departDateMonPM = new DowDate(1,time1530);
         DowDate arrivalDateMonPM = new DowDate(1, time1730);
 
-        Dow departDateTueAM =  new DowDate(2, time0615);
+        DowDate departDateTueAM =  new DowDate(2, time0615);
         DowDate arrivalDateTueAM = new DowDate(2, time0930);
 
         DowDate departDateTuePM = new DowDate(2,time1530);
         DowDate arrivalDateTuePM = new DowDate(2, time1730);
 
-        Dow departDateWedAM =  new DowDate(3, time0615);
+        DowDate departDateWedAM =  new DowDate(3, time0615);
         DowDate arrivalDateWedAM = new DowDate(3, time0930);
 
         DowDate departDateWedPM = new DowDate(3,time1530);
         DowDate arrivalDateWedPM = new DowDate(3, time1730);
 
-        Dow departDateThuAM =  new DowDate(4, time0615);
+        DowDate departDateThuAM =  new DowDate(4, time0615);
         DowDate arrivalDateThuAM = new DowDate(4, time0930);
 
         DowDate departDateThuPM = new DowDate(4,time1530);
         DowDate arrivalDateThuPM = new DowDate(4, time1730);
 
-        Dow departDateFriAM =  new DowDate(5, time0615);
+        DowDate departDateFriAM =  new DowDate(5, time0615);
         DowDate arrivalDateFriAM = new DowDate(5, time0930);
 
         DowDate departDateFriPM = new DowDate(5,time1530);
         DowDate arrivalDateFriPM = new DowDate(5, time1730);
 
-        Dow departDateSatAM =  new DowDate(6, time0615);
+        DowDate departDateSatAM =  new DowDate(6, time0615);
         DowDate arrivalDateSatAM = new DowDate(6, time0930);
 
         DowDate departDateSatPM = new DowDate(6,time1530);
