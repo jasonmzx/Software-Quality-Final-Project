@@ -44,10 +44,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Bookings</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="bookings">Bookings</a>
                 </li>
             </ul>
             <!-- Adjusted Toggle Switches Start Here -->
@@ -195,6 +195,7 @@
                 cardHeader.style.alignItems = "center"; // Center items vertically
                 cardHeader.style.justifyContent = "space-between"; // Space between items
 
+
                 // Determine if it's a one-way or round trip based on the inBound array length
                 let tripType = booking.inBound.length > 0 ? 'Round Trip' : 'One Way Trip';
                 let iconHTML = tripType === 'One Way Trip' ? ICON_ONE_WAY : ICON_ROUND_TRIP;
@@ -204,18 +205,72 @@
                 icon.innerHTML = iconHTML + tripType;
                 cardHeader.appendChild(icon);
 
-                //* BOOKING BUTTON HERE -------------------------------------
+                //* BOOKING Submission here HERE -------------------------------------
 
                 let bookNowBtn = document.createElement("button");
                 bookNowBtn.classList.add("btn", "btn-info");
                 bookNowBtn.textContent = "Book Now";
 
+
+                let confirmBtn = document.createElement("button");
+                confirmBtn.classList.add("btn", "btn-success");
+                confirmBtn.textContent = "Confirm Booking";
+
+                //Confirm Booking seciton
+
+                let confirmBookingSection = document.createElement("div");
+                confirmBookingSection.style.display = "flex";
+
+                let inputName = document.createElement("input");
+                inputName.id = "passengerName";
+                inputName.type = "text";
+                inputName.placeholder = "Enter Passenger Name";
+                
+                //Add more bootstrap classes for this:
+                inputName.classList.add("form-control-lg");
+                inputName.style.marginRight = "10px";
+
+                confirmBookingSection.appendChild(inputName);
+                confirmBookingSection.appendChild(confirmBtn);
+
+
                 bookNowBtn.onclick = function () {
+                    if(bookNowBtn.textContent === "Book Now") { //Initiate Booking
+                        
+                        bookNowBtn.classList.add("btn-danger");
+                        bookNowBtn.classList.remove("btn-info");
+
+                        // Add the confirm booking section
+                        cardHeader.appendChild(confirmBookingSection);
+
+
+                        bookNowBtn.textContent = "Cancel";
+
+                    } else { //Cancel Booking
+                        bookNowBtn.classList.add("btn-info");
+                        bookNowBtn.classList.remove("btn-danger");
+
+                        cardHeader.removeChild(confirmBookingSection);
+
+                        bookNowBtn.textContent = "Book Now";
+                    }
+                }
+
+
+
+                confirmBtn.onclick = function () {
                     let UUID = JSON.parse(localStorage.getItem('uuid'));
+                    
+                    const passengerName = document.getElementById("passengerName").value;
+
+                    if(passengerName.length < 1) {
+                        alert("Please enter a valid passenger name.");
+                        return;
+                    }
 
                     let bookingDTO = {
                         userUUID: UUID, 
-                        userName: "Placeholder", // Replace with actual user name
+                        userName: passengerName,
                         bookingUUID: booking.uuid 
                     };
 
@@ -229,7 +284,13 @@
                             200: function (response) {
                                 // Handle 200 OK
                                 console.log('Booking Success:', response);
-                                alert('Booking Successful!');
+
+                                cardHeader.removeChild(confirmBookingSection);
+                                bookNowBtn.textContent = "Booked for " + passengerName;
+                                bookNowBtn.classList.remove("btn-danger");
+                                bookNowBtn.classList.add("btn-secondary");
+                                bookNowBtn.disabled = true;
+
                             },
                             400: function (error) {
                                 // Handle 400 Bad Request

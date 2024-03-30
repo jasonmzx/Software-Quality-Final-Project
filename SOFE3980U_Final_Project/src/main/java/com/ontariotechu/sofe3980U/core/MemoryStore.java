@@ -175,11 +175,11 @@ public class MemoryStore {
 
     //* Session stuff
 
-    public void setBookingList(String sessionID, List<Booking> bookingList) {
+    public void setBookingBrowseList(String sessionID, List<Booking> bookingList) {
         SESS_UUID_Browsed_bookings.put(sessionID, bookingList);
     }
 
-    public List<Booking> getBookingList(String sessionID) { //* get OR default built into Map !
+    public List<Booking> getBookingBrowseList(String sessionID) { //* get OR default built into Map !
        return SESS_UUID_Browsed_bookings.getOrDefault(sessionID, new ArrayList<>());
     }
 

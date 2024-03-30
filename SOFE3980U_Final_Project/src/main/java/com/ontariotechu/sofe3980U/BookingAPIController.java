@@ -32,18 +32,6 @@ import com.ontariotechu.sofe3980U.core.MemoryStore;
 @RestController
 public class BookingAPIController {
 
-    // TODO: Remove dependent Tests for this method
-    @GetMapping("/bookadd")
-    public String addString(@RequestParam(name = "operand1", required = false, defaultValue = "") String operand1,
-            @RequestParam(name = "operand2", required = false, defaultValue = "") String operand2) {
-
-        String s = operand1 + operand2;
-
-        return s;
-        // test ex: http://localhost:8080/bookadd?operand1=hello&operand2=world :
-        // helloworld
-    }
-
     // * All DTO `Data Transfer Objects` are like an Interface for Spring, where the
     // @RequestBody handles serializairton of the class to JSON
 
@@ -79,8 +67,6 @@ public class BookingAPIController {
         MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
         List<Flight> flightNetworkList = memoryStore.getFlightsList();
 
-
-
         //! TEMPORARY CODE TO BE REPLACED BY : buildBookings(searchParameters)
 
         ArrayList<Flight> flights_in = new ArrayList<>();
@@ -109,7 +95,7 @@ public class BookingAPIController {
 
         String sessionID = UUID.randomUUID().toString();
 
-        memoryStore.setBookingList(sessionID, bookingListA);
+        memoryStore.setBookingBrowseList(sessionID, bookingListA);
 
         BookingSessionWrap sessResponseObj = new BookingSessionWrap();
         sessResponseObj.setUUID(sessionID);
@@ -134,10 +120,26 @@ public class BookingAPIController {
     public ResponseEntity<String> submitBooking(@RequestBody BookingSubDTO bookingDTO) {
         try {
             System.out.println("Validating booking...");    
+            System.out.println("User UUID: " + bookingDTO.getUserUUID());
+            System.out.println("User Name: " + bookingDTO.getUserName());
+            System.out.println("Booking UUID: " + bookingDTO.getBookingUUID());
 
-            // Use bookingDTO.getUserUUID(), bookingDTO.getUserName(), and bookingDTO.getBookingUUID() to get the values
 
-            // Add your logic here...
+
+        MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
+        List<Booking> BBL = memoryStore.getBookingBrowseList(bookingDTO.getUserUUID());
+
+        for (Booking booking : BBL) {
+        if(booking.getUUID().equals(bookingDTO.getBookingUUID())){
+            memoryStore.addBookingToBookedList(bookingDTO.getUserUUID(), booking);
+            System.out.println("Booking submitted successfully!");
+            return new ResponseEntity<>("Booking submitted successfully!", HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>("Booking not found!", HttpStatus.BAD_REQUEST);
+        }
+        }
+
 
             return new ResponseEntity<>("Booking submitted successfully!", HttpStatus.OK);
         } catch (IllegalArgumentException e) {

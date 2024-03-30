@@ -44,13 +44,6 @@ public class BookingAPIControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Test
-    public void add() throws Exception {
-        this.mvc.perform(get("/bookadd").param("operand1", "hello").param("operand2", "world"))// .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("helloworld"));
-    }
-
     // TODO: Write more of these search_flight tsts:
 
     @Test
