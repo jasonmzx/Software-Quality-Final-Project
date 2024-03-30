@@ -14,22 +14,27 @@
 </head>
 
 <style>
-.card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-.btn-info {
-    margin-left: auto; /* This might be optional depending on your setup */
-}
+    .btn-info {
+        margin-left: auto;
+        /* This might be optional depending on your setup */
+    }
 
+    .custom-control-input:checked~.custom-control-label::before {
+        color: #fff;
+        border-color: #dd5500;
+        background-color: #e28743;
+    }
 </style>
 
 <body>
 
     <!-- PAGE HEADER -->
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="#">SOFE 3980U | Ticket Booking Application</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -37,7 +42,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
@@ -45,8 +50,23 @@
                     <a class="nav-link" href="#">Bookings</a>
                 </li>
             </ul>
+            <!-- Adjusted Toggle Switches Start Here -->
+            <form class="form-inline my-2 my-lg-0">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="dateFormatSwitch">
+                    <label class="custom-control-label text-white" for="dateFormatSwitch" style="cursor: pointer;">24H
+                        Format</label>
+                </div>
+                <div class="custom-control custom-switch ml-3">
+                    <input type="checkbox" class="custom-control-input" id="directFlightsSwitch">
+                    <label class="custom-control-label text-white" for="directFlightsSwitch"
+                        style="cursor: pointer;">Prioritize Direct Flights</label>
+                </div>
+            </form>
+            <!-- Adjusted Toggle Switches End Here -->
         </div>
     </nav>
+
 
     <div class="container mt-5">
         <form th:action="@{/search_flights}" method="post">
@@ -110,7 +130,7 @@
         <h3 class="avail_status"></h3>
 
         <div class="container avail_bookings"></div>
-        
+
 
     </div>
 
@@ -123,6 +143,18 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
     <script>
+
+        // MENU BOOLEANS:
+
+        // Selector for the date format switch (true for 24H format, false for 12H format)
+        const dateFormat = document.querySelector('#dateFormatSwitch').checked;
+
+        // Selector for the direct flights switch (true for prioritizing direct flights, false otherwise)
+        const directFlights = document.querySelector('#directFlightsSwitch').checked;
+
+        console.log('Date Format 24H:', dateFormat);
+        console.log('Prioritize Direct Flights:', directFlights);
+
 
         // ICON DEFINITIONS;
 
@@ -140,12 +172,15 @@
         function buildBookingListing(bookings) {
             const parsedBookings = JSON.parse(bookings);
 
+            //Availablity Status for Bookings HTML element
+            let availStatus = document.querySelector(".avail_status");
+
             if (parsedBookings.length == 0) {
+                availStatus.innerHTML = `No Bookings Found...`;
                 console.error("No bookings found");
                 return;
             }
 
-            let availStatus = document.querySelector(".avail_status");
             availStatus.innerHTML = `Available Bookings: (${parsedBookings.length})`;
 
             let container = document.querySelector(".avail_bookings");
@@ -156,10 +191,10 @@
                 cardMain.classList.add("card");
 
                 let cardHeader = document.createElement("div");
-cardHeader.classList.add("card-header");
-cardHeader.style.display = "flex"; // Use flexbox
-cardHeader.style.alignItems = "center"; // Center items vertically
-cardHeader.style.justifyContent = "space-between"; // Space between items
+                cardHeader.classList.add("card-header");
+                cardHeader.style.display = "flex"; // Use flexbox
+                cardHeader.style.alignItems = "center"; // Center items vertically
+                cardHeader.style.justifyContent = "space-between"; // Space between items
 
                 // Determine if it's a one-way or round trip based on the inBound array length
                 let tripType = booking.inBound.length > 0 ? 'Round Trip' : 'One Way Trip';
@@ -172,10 +207,10 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
 
                 //* BOOKING BUTTON HERE -------------------------------------
 
-                    let bookNowBtn = document.createElement("button");
-                    bookNowBtn.classList.add("btn", "btn-info");
-                    bookNowBtn.textContent = "Book Now";
-                    cardHeader.appendChild(bookNowBtn);
+                let bookNowBtn = document.createElement("button");
+                bookNowBtn.classList.add("btn", "btn-info");
+                bookNowBtn.textContent = "Book Now";
+                cardHeader.appendChild(bookNowBtn);
 
                 // -----------------------------------------------------------
 
@@ -206,7 +241,7 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                 cardText.classList.add("card-text");
 
                 booking.outBound.forEach((flight, index) => {
-                    cardText.innerHTML += formatFlightDetails(flight, `Leg ${index+1}`) + (index < booking.outBound.length - 1 ? '<hr>' : '');
+                    cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.outBound.length - 1 ? '<hr>' : '');
                 });
 
                 if (booking.inBound.length > 0) {
@@ -219,12 +254,13 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
 
                     cardText.appendChild(cardTitleIn);
                     booking.inBound.forEach((flight, index) => {
-                        cardText.innerHTML += formatFlightDetails(flight, "Inbound") + (index < booking.inBound.length - 1 ? '<hr>' : '');
+                        cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.inBound.length - 1 ? '<hr>' : '');
                     });
                 }
 
                 // Append UUID
-                cardText.innerHTML += `<strong>Booking ID:</strong> <span>${booking.uuid}</span>`;
+                container.append(document.createElement("br"));
+                //cardText.innerHTML += `<strong>Booking ID:</strong> <span>${booking.uuid}</span>`;
 
                 cardBody.appendChild(cardText);
                 cardMain.appendChild(cardBody);
