@@ -144,16 +144,56 @@
 
     <script>
 
+        // Helpers:
+
+        function formatTime(isMilitaryFormat, hour, minute) {
+            let formattedTime = "";
+
+            if (isMilitaryFormat) {
+                // Format in 24-hour format
+                formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            } else {
+                // Convert to 12-hour AM/PM format
+                const suffix = hour >= 12 ? 'PM' : 'AM';
+                hour = hour % 12;
+                hour = hour ? hour : 12; // the hour '0' should be '12'
+                formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${suffix}`;
+            }
+
+            if(formattedTime.startsWith("0")){
+                formattedTime = formattedTime.substring(1);
+            }
+
+            return formattedTime;
+        }
+
+        // --------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
         // MENU BOOLEANS:
 
         // Selector for the date format switch (true for 24H format, false for 12H format)
-        const dateFormat = document.querySelector('#dateFormatSwitch').checked;
+        const timeDisplayFormatSwitch = document.querySelector('#dateFormatSwitch');
 
         // Selector for the direct flights switch (true for prioritizing direct flights, false otherwise)
-        const directFlights = document.querySelector('#directFlightsSwitch').checked;
+        const directFlightsSwitch = document.querySelector('#directFlightsSwitch');
 
-        console.log('Date Format 24H:', dateFormat);
-        console.log('Prioritize Direct Flights:', directFlights);
+        // Log the initial states
+        console.log('Date Format 24H:', timeDisplayFormatSwitch.checked);
+        console.log('Prioritize Direct Flights:', directFlightsSwitch.checked);
+
+        // Event listener for the date format switch
+        timeDisplayFormatSwitch.addEventListener('change', () => {
+            buildBookingListing(BROWSE_BOOKINGS_OBJECT["bookings"]);
+        });
+
+        // Event listener for the direct flights switch
+        directFlightsSwitch.addEventListener('change', () => {
+            console.log('Prioritize Direct Flights:', directFlightsSwitch.checked);
+        });
 
 
         // ICON DEFINITIONS;
@@ -225,7 +265,7 @@
                 inputName.id = "passengerName";
                 inputName.type = "text";
                 inputName.placeholder = "Enter Passenger Name";
-                
+
                 //Add more bootstrap classes for this:
                 inputName.classList.add("form-control-lg");
                 inputName.style.marginRight = "10px";
@@ -235,8 +275,8 @@
 
 
                 bookNowBtn.onclick = function () {
-                    if(bookNowBtn.textContent === "Book Now") { //Initiate Booking
-                        
+                    if (bookNowBtn.textContent === "Book Now") { //Initiate Booking
+
                         bookNowBtn.classList.add("btn-danger");
                         bookNowBtn.classList.remove("btn-info");
 
@@ -260,18 +300,18 @@
 
                 confirmBtn.onclick = function () {
                     let UUID = JSON.parse(localStorage.getItem('uuid'));
-                    
+
                     const passengerName = document.getElementById("passengerName").value;
 
-                    if(passengerName.length < 1) {
+                    if (passengerName.length < 1) {
                         alert("Please enter a valid passenger name.");
                         return;
                     }
 
                     let bookingDTO = {
-                        userUUID: UUID, 
+                        userUUID: UUID,
                         userName: passengerName,
-                        bookingUUID: booking.uuid 
+                        bookingUUID: booking.uuid
                     };
 
                     // AJAX call to the Spring Boot controller
@@ -327,8 +367,10 @@
                 <strong>Flight ${prefix}:</strong> <br>
                 <span>Departure: ${flight.start.name}</span> <br>
                 <span>Arrival: ${flight.destination.name}</span> <br>
-                <span>Departure Time: ${flight.departDate.DayTime.hour}:${flight.departDate.DayTime.minute}</span> <br>
-                <span>Arrival Time: ${flight.arrivalDate.DayTime.hour}:${flight.arrivalDate.DayTime.minute}</span>
+                <span>Departure Time: 
+                    ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span> <br>
+                <span>Arrival Time: 
+                    ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span>
                 `;
                 };
 
