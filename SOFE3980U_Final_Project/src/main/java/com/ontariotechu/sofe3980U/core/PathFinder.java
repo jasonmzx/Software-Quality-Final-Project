@@ -4,6 +4,8 @@ import com.ontariotechu.sofe3980U.booking.Booking;
 import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
 
 import java.util.Map;
+import java.util.UUID;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalTime;
@@ -30,8 +32,8 @@ public class PathFinder {
 
             int minSize = Math.min(flightPathsDeparture.size(), flightPathsReturning.size());
 
-
-            for (int i = 0; i < minSize; i++) {
+            for (int i = 0; i < minSize; i++) 
+            {
                 //Change into an ArrayList type to create booking
                 ArrayList<Flight> departureFlights = new ArrayList<>(flightPathsDeparture.get(i));
                 ArrayList<Flight> returningFlights = new ArrayList<>(flightPathsReturning.get(i));
@@ -41,7 +43,8 @@ public class PathFinder {
                 bookings.add(booking);
             }
         } else {
-            for (List<Flight> flightPath : flightPathsDeparture) {
+            for (List<Flight> flightPath : flightPathsDeparture) 
+            {
                 //Change into an ArrayList type to create booking
                 ArrayList<Flight> departureFlights = new ArrayList<>(flightPath);
 
