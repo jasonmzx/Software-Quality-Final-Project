@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//local import
+import com.ontariotechu.sofe3980U.booking.Booking;
+
 public class MemoryStore {
 
     private static MemoryStore instance = null; // SINGLETON INSTANCE
@@ -16,6 +19,10 @@ public class MemoryStore {
 
     private List<Airport> airportsList;
     private List<Flight> flightNetworkList;
+
+    // Bookings 
+
+    private HashMap<String, List<Booking>> bookings = new HashMap<>();
 
     private MemoryStore() { //Private Constructor, as we'll only be building this object internally
         airportsList = new ArrayList<>();
@@ -111,8 +118,14 @@ public class MemoryStore {
         //TOR to NYC
         flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateSunPM,arrivalDateSatPM));
 
-        //TOR to LA
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(2), departDateSunPM,arrivalDate2SunAM));
+        //NYC to LA
+        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(2), departDateSunPM,arrivalDate2SunAM));
+
+        //LA to NYC
+        flightNetworkList.add(new Flight(airportsList.get(2), airportsList.get(1), departDateTueAM,arrivalDateTueAM));
+
+        //NYC to TOR   
+        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(5), departDateTuePM,arrivalDateTuePM));
 
         //TOR to CHI
         flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(3), departDateMonAM,arrivalDateMonAM));
@@ -130,7 +143,34 @@ public class MemoryStore {
         return instance;
     }
 
+    // -------------- Booking Getters and Setters ---------------------------
+
+    public void addToUUIDBookingList(String uuid, Booking booking) {
+        // Check if the bookings hashmap already contains the uuid
+        if (bookings.containsKey(uuid)) {
+            // Add the booking to the existing list
+            bookings.get(uuid).add(booking);
+        } else {
+            // Create a new list and add the booking to it, then put it in the hashmap
+            List<Booking> newList = new ArrayList<>();
+            newList.add(booking);
+            bookings.put(uuid, newList);
+        }
+    }
+
+    public List<Booking> getBookingsByUUID(String uuid) {
+        // Check if the bookings hashmap contains the uuid
+        if (bookings.containsKey(uuid)) {
+            return bookings.get(uuid);
+        } else {
+            // Return an empty list or null, depending on your preference
+            return new ArrayList<>();
+            // Alternatively, return null if you prefer to indicate no bookings found.
+        }
+    }
+
     // -------------- Getters & Setters ---------------------------
+
 
     public List<Airport> getAirportList() {
         return airportsList;
