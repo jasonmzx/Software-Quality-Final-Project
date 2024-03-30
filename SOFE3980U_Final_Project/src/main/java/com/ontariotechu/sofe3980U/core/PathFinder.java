@@ -6,18 +6,51 @@ import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalTime;
+import java.util.UUID;
 
 public class PathFinder {
     
     // Private constructor to prevent instantiation
     private PathFinder() {}
 
-
     public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
-        // Implementation goes here
-        System.out.println("PathFinder.buildBookings() called.");
-        throw new UnsupportedOperationException("Path finding not implemented yet.");
+        List<Airport> aL = MemoryStore.getInstance().getAirportList();
+        Airport start = aL.get(searchDTO.getDepartureAirport());
+        Airport end = aL.get(searchDTO.getArrivalAirport());
+        int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
+        LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
+        DowDate earliestTimeOfDay = new DowDate(dow, time0100);
 
+        List<List<Flight>> flightPathsDeparture = pathFind(start, end, earliestTimeOfDay);
+        List<Booking> bookings = new ArrayList<>();
+
+        if (searchDTO.getRoundTrip()) {
+            List<List<Flight>> flightPathsReturning = pathFind(end, start, earliestTimeOfDay);
+
+            int minSize = Math.min(flightPathsDeparture.size(), flightPathsReturning.size());
+
+
+            for (int i = 0; i < minSize; i++) {
+                //Change into an ArrayList type to create booking
+                ArrayList<Flight> departureFlights = new ArrayList<>(flightPathsDeparture.get(i));
+                ArrayList<Flight> returningFlights = new ArrayList<>(flightPathsReturning.get(i));
+
+                //Create new booking
+                Booking booking = new Booking(departureFlights, returningFlights, UUID.randomUUID().toString());
+                bookings.add(booking);
+            }
+        } else {
+            for (List<Flight> flightPath : flightPathsDeparture) {
+                //Change into an ArrayList type to create booking
+                ArrayList<Flight> departureFlights = new ArrayList<>(flightPath);
+
+                //Create new booking
+                Booking booking = new Booking(departureFlights, UUID.randomUUID().toString()); //Assuming no returning flights for one-way
+                bookings.add(booking);
+            }
+        }
+        return bookings;
     }
 
     // Find flight paths for a booking

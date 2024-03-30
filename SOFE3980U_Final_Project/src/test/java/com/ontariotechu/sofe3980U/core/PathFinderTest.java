@@ -29,7 +29,7 @@ public class PathFinderTest {
         // Test the pathFind function
         // This function is a placeholder and should throw an UnsupportedOperationException
         try {
-            PathFinder.pathFind(null, null, null, null, null);
+            PathFinder.pathFind(null, null, null);
         } catch (UnsupportedOperationException e) {
             assertNotNull(e);
         }
