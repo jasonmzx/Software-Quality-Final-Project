@@ -18,11 +18,20 @@ public class PathFinder {
 
     public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
         List<Airport> aL = MemoryStore.getInstance().getAirportList();
-        Airport start = aL.get(searchDTO.getDepartureAirport());
-        Airport end = aL.get(searchDTO.getArrivalAirport());
+        Airport start = new Airport();
+        Airport end = new Airport();
         int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
         LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
         DowDate earliestTimeOfDay = new DowDate(dow, time0100);
+
+        //Set proper airports
+        for (Airport airport : aL) {
+            if (searchDTO.getDepartureAirport() == airport.getID()) {
+                start = airport;
+            } else if (searchDTO.getArrivalAirport() == airport.getID()) {
+                end = airport;
+            }
+        }
 
         List<List<Flight>> flightPathsDeparture = pathFind(start, end, earliestTimeOfDay);
         List<Booking> bookings = new ArrayList<>();
@@ -84,13 +93,13 @@ public class PathFinder {
         }
     }
 
-    private static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
+    public static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
         List<Flight> filteredFlights = new ArrayList<>();
         List<Flight> flightsList = flightsMap.get(currentAirport.getID());
         if (flightsList != null) {
             for (Flight flight : flightsList) {
                 // Only add flights departing after the specified time
-                if(flight.getDepartDate().compareTo(afterTime) > 0) {
+                if(flight.getDepartDate().compareTo(afterTime) >= 0) {
                     filteredFlights.add(flight);
                 }
             }

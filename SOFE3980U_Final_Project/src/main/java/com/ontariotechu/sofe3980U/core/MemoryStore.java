@@ -116,10 +116,10 @@ public class MemoryStore {
         DowDate arrivalDateSatPM = new DowDate(6, time1730);
 
         //TOR to NYC
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateSunPM,arrivalDateSatPM));
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateMonAM,arrivalDateMonPM));
 
         //NYC to LA
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(2), departDateSunPM,arrivalDate2SunAM));
+        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(2), departDateSunAM,arrivalDateSunPM));
 
         //LA to NYC
         flightNetworkList.add(new Flight(airportsList.get(2), airportsList.get(1), departDateTueAM,arrivalDateTueAM));
@@ -131,7 +131,7 @@ public class MemoryStore {
         flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(3), departDateMonAM,arrivalDateMonAM));
 
         //CHI to LA
-        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(2), departDateMonPM,arrivalDateMonPM));
+        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(2), departDateMonAM,arrivalDateMonPM));
 
 
     }
