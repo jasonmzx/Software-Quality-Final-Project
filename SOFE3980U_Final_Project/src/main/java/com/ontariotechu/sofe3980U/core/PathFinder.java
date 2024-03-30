@@ -8,42 +8,53 @@ import java.util.UUID;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalTime;
+import java.util.UUID;
 
 public class PathFinder {
     
     // Private constructor to prevent instantiation
     private PathFinder() {}
 
+    public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
+        List<Airport> aL = MemoryStore.getInstance().getAirportList();
+        Airport start = aL.get(searchDTO.getDepartureAirport());
+        Airport end = aL.get(searchDTO.getArrivalAirport());
+        int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
+        LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
+        DowDate earliestTimeOfDay = new DowDate(dow, time0100);
 
-public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
-    
-    List<Airport> aL = MemoryStore.getInstance().getAirportList();
-    
-    Airport start = aL.get(searchDTO.getDepartureAirport());
-    Airport end = aL.get(searchDTO.getArrivalAirport());
-    
-    //Get Departure Date DOW
+        List<List<Flight>> flightPathsDeparture = pathFind(start, end, earliestTimeOfDay);
+        List<Booking> bookings = new ArrayList<>();
 
-    //*From 1 Monday to 7 Sunday (1: MON, 2: TUE, 3: WED, 4: THU, 5: FRI, 6: SAT, 7: SUN)
-    
-    int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue(); 
-    LocalTime time0100 = LocalTime.of(1, 0); //1:00 AM
+        if (searchDTO.getRoundTrip()) {
+            List<List<Flight>> flightPathsReturning = pathFind(end, start, earliestTimeOfDay);
 
-    DowDate earliestTimeOfDay =  new DowDate(dow, time0100);
+            int minSize = Math.min(flightPathsDeparture.size(), flightPathsReturning.size());
 
-    List<List<Flight>> flightPaths = pathFind(start, end, earliestTimeOfDay);
-    List<Booking> bookings = new ArrayList<>();
+            for (int i = 0; i < minSize; i++) 
+            {
+                //Change into an ArrayList type to create booking
+                ArrayList<Flight> departureFlights = new ArrayList<>(flightPathsDeparture.get(i));
+                ArrayList<Flight> returningFlights = new ArrayList<>(flightPathsReturning.get(i));
 
-    for (List<Flight> flightPath : flightPaths) {
-        // Convert List<Flight> to ArrayList<Flight>
-        ArrayList<Flight> flightPathArrayList = new ArrayList<>(flightPath);
-        
-        // Assuming Booking constructor takes ArrayList<Flight> and a String for ID
-        Booking booking = new Booking(flightPathArrayList, UUID.randomUUID().toString());
-        bookings.add(booking);
+                //Create new booking
+                Booking booking = new Booking(departureFlights, returningFlights, UUID.randomUUID().toString());
+                bookings.add(booking);
+            }
+        } else {
+            for (List<Flight> flightPath : flightPathsDeparture) 
+            {
+                //Change into an ArrayList type to create booking
+                ArrayList<Flight> departureFlights = new ArrayList<>(flightPath);
+
+                //Create new booking
+                Booking booking = new Booking(departureFlights, UUID.randomUUID().toString()); //Assuming no returning flights for one-way
+                bookings.add(booking);
+            }
+        }
+        return bookings;
     }
-    return bookings;
-}
 
     // Find flight paths for a booking
     public static List<List<Flight>> pathFind(Airport start, Airport end, DowDate departAfter) {

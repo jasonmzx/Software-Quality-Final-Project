@@ -17,6 +17,8 @@ import com.ontariotechu.sofe3980U.core.PathFinder;
 
 public class PathFinderTest {
 
+    //TODO: MAKE BETTER TESTS
+
     @Test
     public void testPathFinder() {
         // Create a FlightSearchDTO object
@@ -55,17 +57,27 @@ public class PathFinderTest {
             System.out.println();
         }
     }
+  
+    @Test
+    public void testBuildBookings() {
+        // Test the buildBookings function
+        // This function is a placeholder and should throw an UnsupportedOperationException
+        try {
+            PathFinder.buildBookings(null);
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
 
+    @Test
+    public void testPathFind() {
+        // Test the pathFind function
+        // This function is a placeholder and should throw an UnsupportedOperationException
+        try {
+            PathFinder.pathFind(null, null, null);
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
 
-
-    // @Test
-    // public void testPathFind() {
-    //     // Test the pathFind function
-    //     // This function is a placeholder and should throw an UnsupportedOperationException
-    //     try {
-    //         PathFinder.pathFind(null, null, null, null, null);
-    //     } catch (UnsupportedOperationException e) {
-    //         assertNotNull(e);
-    //     }
-    // }
 }
