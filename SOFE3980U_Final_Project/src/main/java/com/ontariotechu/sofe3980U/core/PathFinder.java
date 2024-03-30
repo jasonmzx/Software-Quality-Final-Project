@@ -58,8 +58,10 @@ public class PathFinder {
 
     // Find flight paths for a booking
     public static List<List<Flight>> pathFind(Airport start, Airport end, DowDate departAfter) {
+        
         List<List<Flight>> allPaths = new ArrayList<>();
         List<Flight> currentPath = new ArrayList<>();
+        
         Map<Integer, List<Flight>> flightsMap = MemoryStore.getInstance().getSortedFlights();
         findFlightsRecursive(flightsMap, start, end, departAfter, currentPath, allPaths);
         return allPaths;
@@ -83,17 +85,17 @@ public class PathFinder {
     }
 
     private static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
-        
-        //get flights starting from currentAirport
+        List<Flight> filteredFlights = new ArrayList<>();
         List<Flight> flightsList = flightsMap.get(currentAirport.getID());
-
-        for (Flight flight : flightsList) {
-            //if flight departure <= afterTime, remove flight from list
-            if(flight.getDepartDate().compareTo(afterTime) <= 0) {
-                flightsList.remove(flight);
+        if (flightsList != null) {
+            for (Flight flight : flightsList) {
+                // Only add flights departing after the specified time
+                if(flight.getDepartDate().compareTo(afterTime) > 0) {
+                    filteredFlights.add(flight);
+                }
             }
         }
-
-        return flightsList;
+        return filteredFlights;
     }
+    
 }

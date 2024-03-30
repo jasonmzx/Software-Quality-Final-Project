@@ -3,6 +3,7 @@ package com.ontariotechu.sofe3980U;
 //Java STD Imports:
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 //Spring Imports:
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
 
 import com.ontariotechu.sofe3980U.booking.Booking;
 import com.ontariotechu.sofe3980U.core.Flight;
+import com.ontariotechu.sofe3980U.core.MemoryStore;
 
 
 @RestController
@@ -71,11 +73,33 @@ public class BookingAPIController {
 
         // If validation passes, return a 200 status
 
-        ArrayList<Flight> flights_in = new ArrayList<>();
+        //! TEMPORARY CODE TO BE REPLACED BY : buildBookings(searchParameters)
+        MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
+        List<Flight> flightNetworkList = memoryStore.getFlightsList();
 
-        //Get JSON-Ified List of flights
-        Booking test_booking = new Booking(flights_in, "uuid");
+
+        ArrayList<Flight> flights_in = new ArrayList<>();
         
+        //Get JSON-Ified List of flights
+        Booking test_one_way_booking = new Booking(flights_in, "uuid1");
+
+        flights_in.add(flightNetworkList.get(0)); //YYZ to JFK
+        flights_in.add(flightNetworkList.get(1)); //JFK to LAX
+
+        ArrayList<Flight> flights_out = new ArrayList<>();
+
+        flights_out.add(flightNetworkList.get(2));
+        flights_out.add(flightNetworkList.get(3));
+
+        Booking test_round_booking = new Booking(flights_in, flights_out, "uuid2");
+
+        List<Booking> test_booking = new ArrayList<>();
+        
+        test_booking.add(test_one_way_booking);
+        test_booking.add(test_round_booking);
+
+        //! TEMPOARY CODE TO BE REPLACED BY : buildBookings(searchParameters) ^^^
+
         String jsonString = "";
 
         try {
@@ -89,6 +113,18 @@ public class BookingAPIController {
         }
 
         return new ResponseEntity<>(jsonString, HttpStatus.OK);
+    }
+
+    @PostMapping("/submit_booking")
+    public ResponseEntity<String> submitBooking(@RequestBody Booking booking) {
+        try {
+            System.out.println("Validating booking...");    
+
+            return new ResponseEntity<>("Booking submitted successfully!", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     

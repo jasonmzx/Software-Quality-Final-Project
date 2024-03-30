@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//local import
+import com.ontariotechu.sofe3980U.booking.Booking;
+
 public class MemoryStore {
 
     private static MemoryStore instance = null; // SINGLETON INSTANCE
@@ -16,6 +19,10 @@ public class MemoryStore {
 
     private List<Airport> airportsList;
     private List<Flight> flightNetworkList;
+
+    // Bookings 
+
+    private HashMap<String, List<Booking>> bookings = new HashMap<>();
 
     private MemoryStore() { //Private Constructor, as we'll only be building this object internally
         airportsList = new ArrayList<>();
@@ -66,16 +73,65 @@ public class MemoryStore {
         LocalTime time0615 = LocalTime.of(6, 15);
         LocalTime time0930 = LocalTime.of(9, 30);
 
+        DowDate departDateSunAM = new DowDate(0,time0615);
+        DowDate arrivalDate2SunAM = new DowDate(0, time0930);
 
-        DowDate departDate = new DowDate(0,time1530);
-        DowDate arrivalDate= new DowDate(0, time1730);
+        DowDate departDateSunPM = new DowDate(0,time1530);
+        DowDate arrivalDateSunPM = new DowDate(0, time1730);
 
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDate,arrivalDate));
+        DowDate departDateMonAM =  new DowDate(1, time0615);
+        DowDate arrivalDateMonAM = new DowDate(1, time0930);
 
-        DowDate departDate2 = new DowDate(0,time0615);
-        DowDate arrivalDate2= new DowDate(0, time0930);
+        DowDate departDateMonPM = new DowDate(1,time1530);
+        DowDate arrivalDateMonPM = new DowDate(1, time1730);
 
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(2), departDate2,arrivalDate2));
+        DowDate departDateTueAM =  new DowDate(2, time0615);
+        DowDate arrivalDateTueAM = new DowDate(2, time0930);
+
+        DowDate departDateTuePM = new DowDate(2,time1530);
+        DowDate arrivalDateTuePM = new DowDate(2, time1730);
+
+        DowDate departDateWedAM =  new DowDate(3, time0615);
+        DowDate arrivalDateWedAM = new DowDate(3, time0930);
+
+        DowDate departDateWedPM = new DowDate(3,time1530);
+        DowDate arrivalDateWedPM = new DowDate(3, time1730);
+
+        DowDate departDateThuAM =  new DowDate(4, time0615);
+        DowDate arrivalDateThuAM = new DowDate(4, time0930);
+
+        DowDate departDateThuPM = new DowDate(4,time1530);
+        DowDate arrivalDateThuPM = new DowDate(4, time1730);
+
+        DowDate departDateFriAM =  new DowDate(5, time0615);
+        DowDate arrivalDateFriAM = new DowDate(5, time0930);
+
+        DowDate departDateFriPM = new DowDate(5,time1530);
+        DowDate arrivalDateFriPM = new DowDate(5, time1730);
+
+        DowDate departDateSatAM =  new DowDate(6, time0615);
+        DowDate arrivalDateSatAM = new DowDate(6, time0930);
+
+        DowDate departDateSatPM = new DowDate(6,time1530);
+        DowDate arrivalDateSatPM = new DowDate(6, time1730);
+
+        //TOR to NYC
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateSunPM,arrivalDateSatPM));
+
+        //NYC to LA
+        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(2), departDateSunPM,arrivalDate2SunAM));
+
+        //LA to NYC
+        flightNetworkList.add(new Flight(airportsList.get(2), airportsList.get(1), departDateTueAM,arrivalDateTueAM));
+
+        //NYC to TOR   
+        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(5), departDateTuePM,arrivalDateTuePM));
+
+        //TOR to CHI
+        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(3), departDateMonAM,arrivalDateMonAM));
+
+        //CHI to LA
+        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(2), departDateMonPM,arrivalDateMonPM));
 
 
     }
@@ -87,7 +143,34 @@ public class MemoryStore {
         return instance;
     }
 
+    // -------------- Booking Getters and Setters ---------------------------
+
+    public void addToUUIDBookingList(String uuid, Booking booking) {
+        // Check if the bookings hashmap already contains the uuid
+        if (bookings.containsKey(uuid)) {
+            // Add the booking to the existing list
+            bookings.get(uuid).add(booking);
+        } else {
+            // Create a new list and add the booking to it, then put it in the hashmap
+            List<Booking> newList = new ArrayList<>();
+            newList.add(booking);
+            bookings.put(uuid, newList);
+        }
+    }
+
+    public List<Booking> getBookingsByUUID(String uuid) {
+        // Check if the bookings hashmap contains the uuid
+        if (bookings.containsKey(uuid)) {
+            return bookings.get(uuid);
+        } else {
+            // Return an empty list or null, depending on your preference
+            return new ArrayList<>();
+            // Alternatively, return null if you prefer to indicate no bookings found.
+        }
+    }
+
     // -------------- Getters & Setters ---------------------------
+
 
     public List<Airport> getAirportList() {
         return airportsList;
