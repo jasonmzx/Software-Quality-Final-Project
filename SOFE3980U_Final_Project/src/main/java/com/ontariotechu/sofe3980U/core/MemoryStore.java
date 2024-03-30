@@ -20,9 +20,13 @@ public class MemoryStore {
     private List<Airport> airportsList;
     private List<Flight> flightNetworkList;
 
+
+
     // Bookings 
 
-    private HashMap<String, List<Booking>> bookings = new HashMap<>();
+    private HashMap<String, List<Booking>> SESS_UUID_Browsed_bookings = new HashMap<>(); //Holds the bookings that have been browsed
+
+    private HashMap<String, List<Booking>> UUID_Booked_bookings = new HashMap<>();
 
     private MemoryStore() { //Private Constructor, as we'll only be building this object internally
         airportsList = new ArrayList<>();
@@ -143,30 +147,40 @@ public class MemoryStore {
         return instance;
     }
 
-    // -------------- Booking Getters and Setters ---------------------------
+    // -------------- Booking State Getters and Setters ---------------------------
 
-    public void addToUUIDBookingList(String uuid, Booking booking) {
+    public void addBookingToBookedList(String uuid, Booking booking) {
         // Check if the bookings hashmap already contains the uuid
-        if (bookings.containsKey(uuid)) {
+        if (UUID_Booked_bookings.containsKey(uuid)) {
             // Add the booking to the existing list
-            bookings.get(uuid).add(booking);
+            UUID_Booked_bookings.get(uuid).add(booking);
         } else {
             // Create a new list and add the booking to it, then put it in the hashmap
             List<Booking> newList = new ArrayList<>();
             newList.add(booking);
-            bookings.put(uuid, newList);
+            UUID_Booked_bookings.put(uuid, newList);
         }
     }
 
-    public List<Booking> getBookingsByUUID(String uuid) {
+    public List<Booking> getBookedListByUUID(String uuid) {
         // Check if the bookings hashmap contains the uuid
-        if (bookings.containsKey(uuid)) {
-            return bookings.get(uuid);
+        if (UUID_Booked_bookings.containsKey(uuid)) {
+            return UUID_Booked_bookings.get(uuid);
         } else {
             // Return an empty list or null, depending on your preference
             return new ArrayList<>();
             // Alternatively, return null if you prefer to indicate no bookings found.
         }
+    }
+
+    //* Session stuff
+
+    public void setBookingList(String sessionID, List<Booking> bookingList) {
+        SESS_UUID_Browsed_bookings.put(sessionID, bookingList);
+    }
+
+    public List<Booking> getBookingList(String sessionID) { //* get OR default built into Map !
+       return SESS_UUID_Browsed_bookings.getOrDefault(sessionID, new ArrayList<>());
     }
 
     // -------------- Getters & Setters ---------------------------

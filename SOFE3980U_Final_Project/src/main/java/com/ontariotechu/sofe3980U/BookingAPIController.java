@@ -4,6 +4,7 @@ package com.ontariotechu.sofe3980U;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 //Spring Imports:
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +20,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 //Local Imports:
 import com.ontariotechu.sofe3980U.core.Utility;
+import com.ontariotechu.sofe3980U.core.restmodels.BookingSubDTO;
 import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
 
 import com.ontariotechu.sofe3980U.booking.Booking;
+import com.ontariotechu.sofe3980U.booking.BookingSessionWrap;
 import com.ontariotechu.sofe3980U.core.Flight;
 import com.ontariotechu.sofe3980U.core.MemoryStore;
 
@@ -73,10 +76,12 @@ public class BookingAPIController {
 
         // If validation passes, return a 200 status
 
-        //! TEMPORARY CODE TO BE REPLACED BY : buildBookings(searchParameters)
         MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
         List<Flight> flightNetworkList = memoryStore.getFlightsList();
 
+
+
+        //! TEMPORARY CODE TO BE REPLACED BY : buildBookings(searchParameters)
 
         ArrayList<Flight> flights_in = new ArrayList<>();
         
@@ -93,18 +98,28 @@ public class BookingAPIController {
 
         Booking test_round_booking = new Booking(flights_in, flights_out, "uuid2");
 
-        List<Booking> test_booking = new ArrayList<>();
+        List<Booking> bookingListA = new ArrayList<>();
         
-        test_booking.add(test_one_way_booking);
-        test_booking.add(test_round_booking);
+        bookingListA.add(test_one_way_booking);
+        bookingListA.add(test_round_booking);
 
         //! TEMPOARY CODE TO BE REPLACED BY : buildBookings(searchParameters) ^^^
+
+        //TODO: replace w/ real booking, Save session:         
+
+        String sessionID = UUID.randomUUID().toString();
+
+        memoryStore.setBookingList(sessionID, bookingListA);
+
+        BookingSessionWrap sessResponseObj = new BookingSessionWrap();
+        sessResponseObj.setUUID(sessionID);
+        sessResponseObj.setBookings(bookingListA);
 
         String jsonString = "";
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            jsonString = objectMapper.writeValueAsString(test_booking);
+            jsonString = objectMapper.writeValueAsString(sessResponseObj);
             System.out.println(jsonString);
             // Now jsonString contains the JSON representation of test_booking
         } catch (Exception e) {
@@ -116,15 +131,18 @@ public class BookingAPIController {
     }
 
     @PostMapping("/submit_booking")
-    public ResponseEntity<String> submitBooking(@RequestBody Booking booking) {
+    public ResponseEntity<String> submitBooking(@RequestBody BookingSubDTO bookingDTO) {
         try {
             System.out.println("Validating booking...");    
+
+            // Use bookingDTO.getUserUUID(), bookingDTO.getUserName(), and bookingDTO.getBookingUUID() to get the values
+
+            // Add your logic here...
 
             return new ResponseEntity<>("Booking submitted successfully!", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     

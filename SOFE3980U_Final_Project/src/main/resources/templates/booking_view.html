@@ -166,11 +166,10 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                                   </svg>`;
 
-
-
+        let BROWSE_BOOKINGS_OBJECT = null;
 
         function buildBookingListing(bookings) {
-            const parsedBookings = JSON.parse(bookings);
+            const parsedBookings = bookings;
 
             //Availablity Status for Bookings HTML element
             let availStatus = document.querySelector(".avail_status");
@@ -186,7 +185,7 @@
             let container = document.querySelector(".avail_bookings");
             container.innerHTML = "";
 
-            parsedBookings.forEach(booking => {
+            parsedBookings.forEach((booking, booking_IDX) => {
                 let cardMain = document.createElement("div");
                 cardMain.classList.add("card");
 
@@ -210,6 +209,42 @@
                 let bookNowBtn = document.createElement("button");
                 bookNowBtn.classList.add("btn", "btn-info");
                 bookNowBtn.textContent = "Book Now";
+
+                bookNowBtn.onclick = function () {
+                    let UUID = JSON.parse(localStorage.getItem('uuid'));
+
+                    let bookingDTO = {
+                        userUUID: UUID, 
+                        userName: "Placeholder", // Replace with actual user name
+                        bookingUUID: booking.uuid 
+                    };
+
+                    // AJAX call to the Spring Boot controller
+                    $.ajax({
+                        type: 'POST',
+                        url: '/submit_booking', // Update this URL if your API endpoint is different
+                        contentType: 'application/json',
+                        data: JSON.stringify(bookingDTO),
+                        statusCode: {
+                            200: function (response) {
+                                // Handle 200 OK
+                                console.log('Booking Success:', response);
+                                alert('Booking Successful!');
+                            },
+                            400: function (error) {
+                                // Handle 400 Bad Request
+                                console.log('Booking Error:', error);
+                                alert('Booking Error: ' + error.responseText);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle any other errors here
+                            console.log('Booking Error:', error);
+                            alert('Booking Error: ' + error);
+                        }
+                    });
+                };
+
                 cardHeader.appendChild(bookNowBtn);
 
                 // -----------------------------------------------------------
@@ -272,11 +307,6 @@
 
 
 
-
-
-
-
-        // Initialize DOM elements
         let SearchFlight_ERROR_BOX = document.getElementById("searchFlightErrorMsg");
         SearchFlight_ERROR_BOX.style.visibility = "hidden";
 
@@ -314,8 +344,17 @@
                     statusCode: {
                         200: function (response) {
                             // Handle 200 OK
-                            buildBookingListing(response);
-                            // Optionally hide the error box or show a success message
+
+                            BROWSE_BOOKINGS_OBJECT = JSON.parse(response);
+
+                            // build bookings to DOM
+                            buildBookingListing(BROWSE_BOOKINGS_OBJECT["bookings"]);
+
+                            // Set UUID
+                            localStorage.setItem('uuid', JSON.stringify(BROWSE_BOOKINGS_OBJECT["uuid"]));
+                            console.log('LS_UUID:', JSON.parse(localStorage.getItem('uuid')));
+
+                            // Show success message:
                             SearchFlight_ERROR_BOX.style.visibility = "visible";
                             SearchFlight_ERROR_BOX.innerHTML = "Success! Valid request, here are some flights..."
                             SearchFlight_ERROR_BOX.classList.remove("alert-danger");
