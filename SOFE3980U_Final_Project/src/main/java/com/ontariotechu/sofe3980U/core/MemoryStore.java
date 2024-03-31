@@ -20,6 +20,16 @@ public class MemoryStore {
     private List<Airport> airportsList;
     private List<Flight> flightNetworkList;
 
+    public Airport getAirportByID(int id) {
+        for (Airport airport : airportsList) {
+            if (airport.getID() == id) {
+                return airport;
+            }
+        }
+        System.out.println("NULL ID MOFO!: " + id);
+        return null;
+    }
+
     // Bookings 
 
     private HashMap<String, List<Booking>> bookings = new HashMap<>();
@@ -116,160 +126,155 @@ public class MemoryStore {
         DowDate arrivalDateSatPM = new DowDate(6, time1730);
 
         //TOR to NYC
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateMonAM,arrivalDateMonAM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(1), departDateMonAM,arrivalDateMonAM));
 
         //NYC to LA
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(2), departDateSunAM,arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(2), departDateSunAM,arrivalDateSunPM));
 
         //LA to NYC
-        flightNetworkList.add(new Flight(airportsList.get(2), airportsList.get(1), departDateTueAM,arrivalDateTueAM));
+        flightNetworkList.add(new Flight(getAirportByID(2), getAirportByID(1), departDateTueAM,arrivalDateTueAM));
 
         //NYC to TOR   
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(5), departDateTuePM,arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(5), departDateTuePM,arrivalDateTuePM));
 
         //TOR to CHI
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(3), departDateMonAM,arrivalDateMonAM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(3), departDateMonAM,arrivalDateMonAM));
 
         //CHI to LA
-        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(2), departDateMonAM,arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(3), getAirportByID(2), departDateMonAM,arrivalDateMonPM));
 
         //NYC to Dubai
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(8), departDateWedAM, arrivalDateWedPM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(8), departDateWedAM, arrivalDateWedPM));
 
         //Dubai to Tokyo
-        flightNetworkList.add(new Flight(airportsList.get(8), airportsList.get(0), departDateThuAM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(8), getAirportByID(99), departDateThuAM, arrivalDateThuPM));
 
         //Tokyo to Hong Kong
-        flightNetworkList.add(new Flight(airportsList.get(0), airportsList.get(9), departDateFriAM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(99), getAirportByID(9), departDateFriAM, arrivalDateFriPM));
 
         //Hong Kong to Sydney
-        flightNetworkList.add(new Flight(airportsList.get(9), airportsList.get(7), departDateSatAM, arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(9), getAirportByID(7), departDateSatAM, arrivalDateSatPM));
 
         //Sydney to Frankfurt
-        flightNetworkList.add(new Flight(airportsList.get(7), airportsList.get(11), departDateSunAM, arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(7), getAirportByID(11), departDateSunAM, arrivalDateSunPM));
 
         //Frankfurt to London
-        flightNetworkList.add(new Flight(airportsList.get(11), airportsList.get(10), departDateMonAM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(11), getAirportByID(10), departDateMonAM, arrivalDateMonPM));
 
         //London to Toronto
-        flightNetworkList.add(new Flight(airportsList.get(10), airportsList.get(5), departDateTueAM, arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(10), getAirportByID(5), departDateTueAM, arrivalDateTuePM));
 
         //Toronto to Paris
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(12), departDateWedAM, arrivalDateWedPM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(12), departDateWedAM, arrivalDateWedPM));
 
         // London to Vienna
-        flightNetworkList.add(new Flight(airportsList.get(10), airportsList.get(17), departDateThuAM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(10), getAirportByID(17), departDateThuAM, arrivalDateThuPM));
 
         // Vienna to Prague
-        flightNetworkList.add(new Flight(airportsList.get(17), airportsList.get(13), departDateFriAM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(17), getAirportByID(13), departDateFriAM, arrivalDateFriPM));
 
         // Prague to Brno
-        flightNetworkList.add(new Flight(airportsList.get(13), airportsList.get(24), departDateSatAM, arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(13), getAirportByID(24), departDateSatAM, arrivalDateSatPM));
 
         // Brno to Bratislava
-        flightNetworkList.add(new Flight(airportsList.get(24), airportsList.get(20), departDateSunAM, arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(24), getAirportByID(20), departDateSunAM, arrivalDateSunPM));
 
         // Bratislava to Zagreb
-        flightNetworkList.add(new Flight(airportsList.get(20), airportsList.get(23), departDateMonAM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(20), getAirportByID(23), departDateMonAM, arrivalDateMonPM));
 
         // Zagreb to Munich
-        flightNetworkList.add(new Flight(airportsList.get(23), airportsList.get(22), departDateTueAM, arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(23), getAirportByID(22), departDateTueAM, arrivalDateTuePM));
 
         // Munich to Hamburg
-        flightNetworkList.add(new Flight(airportsList.get(22), airportsList.get(21), departDateWedAM, arrivalDateWedPM));
+        flightNetworkList.add(new Flight(getAirportByID(22), getAirportByID(21), departDateWedAM, arrivalDateWedPM));
 
         // Hamburg to Zurich
-        flightNetworkList.add(new Flight(airportsList.get(21), airportsList.get(14), departDateThuAM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(21), getAirportByID(14), departDateThuAM, arrivalDateThuPM));
 
         // Toronto to Mumbai
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(14), departDateFriAM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(14), departDateFriAM, arrivalDateFriPM));
 
         // Mumbai to Dubai
-        flightNetworkList.add(new Flight(airportsList.get(14), airportsList.get(8), departDateSatAM, arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(14), getAirportByID(8), departDateSatAM, arrivalDateSatPM));
 
         // Dubai to Paris
-        flightNetworkList.add(new Flight(airportsList.get(8), airportsList.get(12), departDateSunAM, arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(8), getAirportByID(12), departDateSunAM, arrivalDateSunPM));
 
         // Paris to Berlin
-        flightNetworkList.add(new Flight(airportsList.get(12), airportsList.get(11), departDateMonAM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(12), getAirportByID(11), departDateMonAM, arrivalDateMonPM));
 
         // Berlin to Sydney
-        flightNetworkList.add(new Flight(airportsList.get(11), airportsList.get(7), departDateTueAM, arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(11), getAirportByID(7), departDateTueAM, arrivalDateTuePM));
 
         // Sydney to Chicago
-        flightNetworkList.add(new Flight(airportsList.get(7), airportsList.get(3), departDateWedAM, arrivalDateWedPM));
+        flightNetworkList.add(new Flight(getAirportByID(7), getAirportByID(3), departDateWedAM, arrivalDateWedPM));
 
         // Chicago to Vienna
-        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(17), departDateThuAM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(3), getAirportByID(17), departDateThuAM, arrivalDateThuPM));
 
         // Vienna to London
-        flightNetworkList.add(new Flight(airportsList.get(17), airportsList.get(10), departDateFriAM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(17), getAirportByID(10), departDateFriAM, arrivalDateFriPM));
 
         // NYC to Chicago
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(3), departDateThuPM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(3), departDateThuPM, arrivalDateThuPM));
 
         // LA to Toronto
-        flightNetworkList.add(new Flight(airportsList.get(2), airportsList.get(5), departDateFriPM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(2), getAirportByID(5), departDateFriPM, arrivalDateFriPM));
 
         // Dubai to Paris
-        flightNetworkList.add(new Flight(airportsList.get(8), airportsList.get(12), departDateMonPM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(8), getAirportByID(12), departDateMonPM, arrivalDateMonPM));
 
         // Tokyo to Sydney
-        flightNetworkList.add(new Flight(airportsList.get(0), airportsList.get(7), departDateTuePM, arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(99), getAirportByID(7), departDateTuePM, arrivalDateTuePM));
 
         // Hong Kong to London
-        flightNetworkList.add(new Flight(airportsList.get(9), airportsList.get(10), departDateWedPM, arrivalDateWedPM));
+        flightNetworkList.add(new Flight(getAirportByID(9), getAirportByID(10), departDateWedPM, arrivalDateWedPM));
 
         // Sydney to Vienna
-        flightNetworkList.add(new Flight(airportsList.get(7), airportsList.get(17), departDateThuPM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(7), getAirportByID(17), departDateThuPM, arrivalDateThuPM));
 
         // Chicago to Dubai
-        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(8), departDateFriPM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(3), getAirportByID(8), departDateFriPM, arrivalDateFriPM));
 
         // Vienna to Mumbai
-        flightNetworkList.add(new Flight(airportsList.get(17), airportsList.get(14), departDateSatPM, arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(17), getAirportByID(14), departDateSatPM, arrivalDateSatPM));
 
         // Paris to Tokyo
-        flightNetworkList.add(new Flight(airportsList.get(12), airportsList.get(0), departDateSunPM, arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(12), getAirportByID(99), departDateSunPM, arrivalDateSunPM));
 
         // Toronto to Dubai
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(8), departDateMonPM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(8), departDateMonPM, arrivalDateMonPM));
 
         // Toronto to Hong Kong
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(9), departDateSatAM, arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(9), departDateSatAM, arrivalDateSatPM));
 
         // Hong Kong to Dubai
-        flightNetworkList.add(new Flight(airportsList.get(9), airportsList.get(8), departDateSunAM, arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(9), getAirportByID(8), departDateSunAM, arrivalDateSunPM));
 
         // Dubai to London
-        flightNetworkList.add(new Flight(airportsList.get(8), airportsList.get(10), departDateMonAM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(8), getAirportByID(10), departDateMonAM, arrivalDateMonPM));
 
         // London to Paris
-        flightNetworkList.add(new Flight(airportsList.get(10), airportsList.get(12), departDateTueAM, arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(10), getAirportByID(12), departDateTueAM, arrivalDateTuePM));
 
         // Paris to Frankfurt
-        flightNetworkList.add(new Flight(airportsList.get(12), airportsList.get(11), departDateWedAM, arrivalDateWedPM));
+        flightNetworkList.add(new Flight(getAirportByID(12), getAirportByID(11), departDateWedAM, arrivalDateWedPM));
 
         // Frankfurt to Munich
-        flightNetworkList.add(new Flight(airportsList.get(11), airportsList.get(22), departDateThuAM, arrivalDateThuPM));
+        flightNetworkList.add(new Flight(getAirportByID(11), getAirportByID(22), departDateThuAM, arrivalDateThuPM));
 
         // Munich to Zurich
-        flightNetworkList.add(new Flight(airportsList.get(22), airportsList.get(14), departDateFriAM, arrivalDateFriPM));
+        flightNetworkList.add(new Flight(getAirportByID(22), getAirportByID(14), departDateFriAM, arrivalDateFriPM));
 
         // Zurich to Vienna
-        flightNetworkList.add(new Flight(airportsList.get(14), airportsList.get(17), departDateSatAM, arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(14), getAirportByID(17), departDateSatAM, arrivalDateSatPM));
 
         // Vienna to Berlin
-        flightNetworkList.add(new Flight(airportsList.get(17), airportsList.get(11), departDateSunAM, arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(17), getAirportByID(11), departDateSunAM, arrivalDateSunPM));
 
         // Berlin to Prague
-        flightNetworkList.add(new Flight(airportsList.get(11), airportsList.get(13), departDateMonAM, arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(11), getAirportByID(13), departDateMonAM, arrivalDateMonPM));
 
-        // Prague to Budapest
-        flightNetworkList.add(new Flight(airportsList.get(13), airportsList.get(25), departDateTueAM, arrivalDateTuePM));
-
-        // Budapest to Vienna
-        flightNetworkList.add(new Flight(airportsList.get(25), airportsList.get(17), departDateWedAM, arrivalDateWedPM));
     }
 
     public static synchronized MemoryStore getInstance() {

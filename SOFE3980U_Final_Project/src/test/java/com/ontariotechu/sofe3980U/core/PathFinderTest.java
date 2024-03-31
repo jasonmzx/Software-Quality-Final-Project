@@ -24,24 +24,15 @@ public class PathFinderTest {
     public void testPathFinder() {
         // Create a FlightSearchDTO object
         FlightSearchDTO searchDTO = new FlightSearchDTO();
-        searchDTO.setDepartureAirport(3);
-        searchDTO.setArrivalAirport(2); 
+        searchDTO.setDepartureAirport(17);
+        searchDTO.setArrivalAirport(1); 
         
         searchDTO.setDepartureDate("03/25/2024");
         searchDTO.parseDep(searchDTO.getDepartureDate()); //needs to be done externally
 
         searchDTO.setRoundTrip(false);
-        Airport start = new Airport();
-        Airport end = new Airport();
-
-        List<Airport> aL = MemoryStore.getInstance().getAirportList();
-        for (Airport airport : aL) {
-            if (searchDTO.getDepartureAirport() == airport.getID()) {
-                start = airport;
-            } else if (searchDTO.getArrivalAirport() == airport.getID()) {
-                end = airport;
-            }
-        }
+        Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
+        Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
         
         int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
         LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
@@ -52,8 +43,6 @@ public class PathFinderTest {
         List<Booking> bookings = PathFinder.buildBookings(searchDTO);
 
         System.out.println("\n\n\n########## Test Path Finder Debug #########  \n\n\n");
-        System.out.println("start.getname: " + start.getName());
-        System.out.println("end.getname: " + end.getName());
 
         // Print bookings
         for (Booking booking : bookings) {

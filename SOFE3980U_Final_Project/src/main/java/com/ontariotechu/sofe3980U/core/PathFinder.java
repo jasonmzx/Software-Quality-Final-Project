@@ -21,20 +21,12 @@ public class PathFinder {
 
     public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
         List<Airport> aL = MemoryStore.getInstance().getAirportList();
-        Airport start = new Airport();
-        Airport end = new Airport();
         int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
         LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
         DowDate earliestTimeOfDay = new DowDate(dow, time0100);
 
-        //Set proper airports
-        for (Airport airport : aL) {
-            if (searchDTO.getDepartureAirport() == airport.getID()) {
-                start = airport;
-            } else if (searchDTO.getArrivalAirport() == airport.getID()) {
-                end = airport;
-            }
-        }
+        Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
+        Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
 
         List<List<Flight>> flightPathsDeparture = pathFind(start, end, earliestTimeOfDay);
         List<Booking> bookings = new ArrayList<>();
