@@ -24,8 +24,8 @@ public class PathFinderTest {
     public void testPathFinder() {
         // Create a FlightSearchDTO object
         FlightSearchDTO searchDTO = new FlightSearchDTO();
-        searchDTO.setDepartureAirport(5);
-        searchDTO.setArrivalAirport(3); 
+        searchDTO.setDepartureAirport(3);
+        searchDTO.setArrivalAirport(2); 
         
         searchDTO.setDepartureDate("03/25/2024");
         searchDTO.parseDep(searchDTO.getDepartureDate()); //needs to be done externally

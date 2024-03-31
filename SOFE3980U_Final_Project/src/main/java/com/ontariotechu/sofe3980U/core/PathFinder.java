@@ -89,7 +89,7 @@ public class PathFinder {
             return;
         }
 
-        List<Flight> nextFlights = getNextFlights(flightsMap, current, departAfter);
+        List<Flight> nextFlights = getNextFlights(flightsMap, currentPath, current, departAfter);
 
         for (Flight flight : nextFlights) {
             currentPath.add(flight); //add current flight to path
@@ -99,13 +99,23 @@ public class PathFinder {
     }
 
     // Find next steps in flight graph
-    public static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
+    public static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, List<Flight> currentPath, Airport currentAirport, DowDate afterTime) {
         List<Flight> filteredFlights = new ArrayList<>();
         List<Flight> flightsList = flightsMap.get(currentAirport.getID());
+        List<Airport> visitedAirports = new ArrayList<>();
+
+        if (currentPath.size() != 0) {
+            visitedAirports.add(currentPath.get(0).getStart());
+            for (Flight flight : currentPath) {
+                visitedAirports.add(flight.getDestination());
+            }
+        }
+
         if (flightsList != null) {
             for (Flight flight : flightsList) {
                 // Only add flights departing after the specified time
-                if(flight.getDepartDate().compareTo(afterTime) >= 0) {
+                // Only add flights with new airports (get rid of cycling)
+                if(flight.getDepartDate().compareTo(afterTime) >= 0 && !visitedAirports.contains(flight.getDestination())) {
                     filteredFlights.add(flight);
                 }
             }
