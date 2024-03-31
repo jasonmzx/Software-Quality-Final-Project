@@ -160,16 +160,21 @@
                 formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${suffix}`;
             }
 
-            if(formattedTime.startsWith("0")){
+            if (formattedTime.startsWith("0")) {
                 formattedTime = formattedTime.substring(1);
             }
 
             return formattedTime;
         }
 
+        // Calculate total flight time in hours
+
+        function calculateTotalFlightTime(booking) {
+
+            return 2;
+        }
+
         // --------------------------------------------------------------------------------------------------------------------------------
-
-
 
 
 
@@ -370,7 +375,7 @@
                 <span>Departure Time: 
                     ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span> <br>
                 <span>Arrival Time: 
-                    ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span>
+                    ${formatTime(timeDisplayFormatSwitch.checked, flight.departDate.DayTime.hour, flight.departDate.DayTime.minute)}</span>
                 `;
                 };
 
@@ -379,8 +384,11 @@
                 cardText.classList.add("card-text");
 
                 booking.outBound.forEach((flight, index) => {
+
                     cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.outBound.length - 1 ? '<hr>' : '');
                 });
+
+                cardText.innerHTML += `<hr><strong>Total Duration:</strong> ${calculateTotalFlightTime(booking.outBound)} hours`;
 
                 if (booking.inBound.length > 0) {
 

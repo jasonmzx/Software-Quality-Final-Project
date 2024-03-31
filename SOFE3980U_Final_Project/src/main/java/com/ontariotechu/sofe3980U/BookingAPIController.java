@@ -147,5 +147,27 @@ public class BookingAPIController {
         }
     }
 
+    @GetMapping("/my_bookings")
+    public ResponseEntity<String> getMyBookings(@RequestParam String userUUID) {
+        MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
+        List<Booking> BBL = memoryStore.getBookedListByUUID(userUUID);
+        
+        System.out.println("User UUID: " + userUUID);
+
+        String jsonString = "";
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            jsonString = objectMapper.writeValueAsString(BBL);
+            System.out.println(jsonString);
+            // Now jsonString contains the JSON representation of test_booking
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the error appropriately
+        }
+
+        return new ResponseEntity<>(jsonString, HttpStatus.OK);
+    }
+
     
 }

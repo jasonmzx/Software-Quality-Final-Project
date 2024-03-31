@@ -28,6 +28,15 @@ public class MemoryStore {
 
     private HashMap<String, List<Booking>> UUID_Booked_bookings = new HashMap<>();
 
+    public Airport getAirportByID(int id) {
+        for (Airport airport : airportsList) {
+            if (airport.getID() == id) {
+                return airport;
+            }
+        }
+        return null;
+    }
+
     private MemoryStore() { //Private Constructor, as we'll only be building this object internally
         airportsList = new ArrayList<>();
         flightNetworkList = new ArrayList<>();
@@ -77,11 +86,11 @@ public class MemoryStore {
         LocalTime time0615 = LocalTime.of(6, 15);
         LocalTime time0930 = LocalTime.of(9, 30);
 
-        DowDate departDateSunAM = new DowDate(0,time0615);
-        DowDate arrivalDate2SunAM = new DowDate(0, time0930);
+        DowDate departDateSunAM = new DowDate(7,time0615);
+        DowDate arrivalDate2SunAM = new DowDate(7, time0930);
 
-        DowDate departDateSunPM = new DowDate(0,time1530);
-        DowDate arrivalDateSunPM = new DowDate(0, time1730);
+        DowDate departDateSunPM = new DowDate(7,time1530);
+        DowDate arrivalDateSunPM = new DowDate(7, time1730);
 
         DowDate departDateMonAM =  new DowDate(1, time0615);
         DowDate arrivalDateMonAM = new DowDate(1, time0930);
@@ -120,22 +129,22 @@ public class MemoryStore {
         DowDate arrivalDateSatPM = new DowDate(6, time1730);
 
         //TOR to NYC
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(1), departDateSunPM,arrivalDateSatPM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(1), departDateSunPM,arrivalDateSunPM));
 
         //NYC to LA
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(2), departDateSunPM,arrivalDate2SunAM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(2), departDateSunPM,arrivalDate2SunAM));
 
         //LA to NYC
-        flightNetworkList.add(new Flight(airportsList.get(2), airportsList.get(1), departDateTueAM,arrivalDateTueAM));
+        flightNetworkList.add(new Flight(getAirportByID(2), getAirportByID(1), departDateTueAM,arrivalDateTueAM));
 
         //NYC to TOR   
-        flightNetworkList.add(new Flight(airportsList.get(1), airportsList.get(5), departDateTuePM,arrivalDateTuePM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(5), departDateTuePM,arrivalDateTuePM));
 
         //TOR to CHI
-        flightNetworkList.add(new Flight(airportsList.get(5), airportsList.get(3), departDateMonAM,arrivalDateMonAM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(3), departDateMonAM,arrivalDateMonAM));
 
         //CHI to LA
-        flightNetworkList.add(new Flight(airportsList.get(3), airportsList.get(2), departDateMonPM,arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(3), getAirportByID(2), departDateMonPM,arrivalDateMonPM));
 
 
     }
@@ -146,6 +155,8 @@ public class MemoryStore {
         }
         return instance;
     }
+
+
 
     // -------------- Booking State Getters and Setters ---------------------------
 
