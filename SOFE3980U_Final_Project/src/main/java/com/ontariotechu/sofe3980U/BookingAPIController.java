@@ -38,7 +38,12 @@ public class BookingAPIController {
     @PostMapping("/search_flights")
     public ResponseEntity<String> searchFlights(@RequestBody FlightSearchDTO searchParameters) {
         
-        
+        if(searchParameters.getDtoUuid() != null) {
+            System.out.println("UUID: " + searchParameters.getDtoUuid());
+        } else {
+            System.out.println("UUID: N/A");
+        }
+
         //! DEBUG --- Format the parameters for display or further processing
         String formattedParams = String.format(
                 "Departure Date: %s\n" +
@@ -90,10 +95,14 @@ public class BookingAPIController {
         bookingListA.add(test_round_booking);
 
         //! TEMPOARY CODE TO BE REPLACED BY : buildBookings(searchParameters) ^^^
-
-        //TODO: replace w/ real booking, Save session:         
+        
+        // >>>>>>>> Session Wrapping for JSON and UUID 
 
         String sessionID = UUID.randomUUID().toString();
+
+        if(searchParameters.getDtoUuid() != null) {
+            sessionID = searchParameters.getDtoUuid(); //if UUID is provided, use it
+        } 
 
         memoryStore.setBookingBrowseList(sessionID, bookingListA);
 
@@ -131,6 +140,9 @@ public class BookingAPIController {
 
         for (Booking booking : BBL) {
         if(booking.getUUID().equals(bookingDTO.getBookingUUID())){
+
+            booking.setNameOfPassenger(bookingDTO.getUserName()); //Set passenger name
+
             memoryStore.addBookingToBookedList(bookingDTO.getUserUUID(), booking);
             System.out.println("Booking submitted successfully!");
             return new ResponseEntity<>("Booking submitted successfully!", HttpStatus.OK);
@@ -151,7 +163,7 @@ public class BookingAPIController {
     public ResponseEntity<String> getMyBookings(@RequestParam String userUUID) {
         MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
         List<Booking> BBL = memoryStore.getBookedListByUUID(userUUID);
-        
+
         System.out.println("User UUID: " + userUUID);
 
         String jsonString = "";

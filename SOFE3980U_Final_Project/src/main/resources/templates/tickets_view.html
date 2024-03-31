@@ -177,12 +177,12 @@ return 2;
 
 
                 // Determine if it's a one-way or round trip based on the inBound array length
-                let tripType = booking.inBound.length > 0 ? 'Round Trip' : 'One Way Trip';
-                let iconHTML = tripType === 'One Way Trip' ? ICON_ONE_WAY : ICON_ROUND_TRIP;
+                let tripType = booking.inBound.length > 0 ? 'Round Trip Ticket' : 'One Way Trip Ticket';
+                let iconHTML = tripType === 'One Way Trip Ticket' ? ICON_ONE_WAY : ICON_ROUND_TRIP;
 
                 // Create an icon div and insert the appropriate SVG HTML
                 let icon = document.createElement("div");
-                icon.innerHTML = iconHTML + tripType;
+                icon.innerHTML = iconHTML + tripType +`: <span style="margin-left: 2vw;"></span>`+ `<strong>`+booking.nameOfPassenger+`</strong>`;
                 cardHeader.appendChild(icon);
 
                 //* BOOKING Submission here HERE -------------------------------------
@@ -190,34 +190,6 @@ return 2;
                 let bookNowBtn = document.createElement("button");
                 bookNowBtn.classList.add("btn", "btn-secondary", "disabled");
                 bookNowBtn.textContent = "Booked";
-
-
-                let confirmBtn = document.createElement("button");
-                confirmBtn.classList.add("btn", "btn-success");
-                confirmBtn.textContent = "Confirm Booking";
-
-                //Confirm Booking seciton
-
-                let confirmBookingSection = document.createElement("div");
-                confirmBookingSection.style.display = "flex";
-
-                let inputName = document.createElement("input");
-                inputName.id = "passengerName";
-                inputName.type = "text";
-                inputName.placeholder = "Enter Passenger Name";
-
-                //Add more bootstrap classes for this:
-                inputName.classList.add("form-control-lg");
-                inputName.style.marginRight = "10px";
-
-                confirmBookingSection.appendChild(inputName);
-                confirmBookingSection.appendChild(confirmBtn);
-
-
-                bookNowBtn.onclick = function () {
-
-                }
-
 
                 cardHeader.appendChild(bookNowBtn);
 

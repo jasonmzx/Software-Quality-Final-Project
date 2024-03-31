@@ -437,8 +437,14 @@
                 // Prevent the default form submission
                 e.preventDefault();
 
+                console.log("Form Submitted");
+                
+                const myUUID = JSON.parse(localStorage.getItem('uuid'));
+                console.log("UUID:", myUUID);
+
                 // Collect form data
                 var formData = {
+                    dtoUuid: myUUID,
                     departureDate: $('#departureDate').val(),
                     departureAirport: $('#departureAirport').val(),
                     arrivalAirport: $('#arrivalAirport').val(),
@@ -446,6 +452,7 @@
                     returnDate: $('#roundTrip').is(':checked') ? $('#returnDate').val() : null
                 };
 
+                console.log(formData);
                 // AJAX call to the Spring Boot controller
                 $.ajax({
                     type: 'POST',
