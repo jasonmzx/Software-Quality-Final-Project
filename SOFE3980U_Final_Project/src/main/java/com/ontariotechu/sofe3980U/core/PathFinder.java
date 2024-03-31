@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -62,6 +65,8 @@ public class PathFinder {
                 bookings.add(booking);
             }
         }
+
+        sortBookings(bookings);
         return bookings;
     }
 
@@ -93,6 +98,7 @@ public class PathFinder {
         }
     }
 
+    // Find next steps in flight graph
     public static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
         List<Flight> filteredFlights = new ArrayList<>();
         List<Flight> flightsList = flightsMap.get(currentAirport.getID());
@@ -105,6 +111,49 @@ public class PathFinder {
             }
         }
         return filteredFlights;
+    }
+
+    // Sorts bookings first by total stops, then by final arrival time; sorts the argument list and outputs the sorted list
+    private static List<Booking> sortBookings(List<Booking> bookings) {
+
+        Map<Integer, List<Booking>> bookingMap = new HashMap<Integer, List<Booking>>();
+        List<Booking> output = new ArrayList<>();
+        int totalstops = 0;
+        int maxstops = 0;
+
+        //sort bookings into hashtable based on total stops
+        for (Booking booking : bookings) {
+            totalstops = booking.getTotalStops();
+            if (bookingMap.containsKey(totalstops)) {
+                bookingMap.get(totalstops).add(booking);
+            }
+            else {
+                bookingMap.put(totalstops, new ArrayList<>());
+                bookingMap.get(totalstops).add(booking);
+                if (totalstops > maxstops) {maxstops = totalstops;}
+            }
+        }
+
+        //for each possible key in hashtable
+        for (int i = 0; i <= maxstops; i++) {
+            if (bookingMap.containsKey(i)) {
+                //sort hash table row
+                Collections.sort(bookingMap.get(i), new Comparator<Booking>() {
+                    @Override
+                    public int compare(Booking b1, Booking b2) {
+                        return b1.getFinalArrivalDate().compareTo(b2.getFinalArrivalDate());
+                    }
+                });
+                
+                //add row to output
+                for (Booking booking : bookingMap.get(i)) {
+                    output.add(booking);
+                }
+            }
+        }
+
+        bookings = output;
+        return output;
     }
     
 }
