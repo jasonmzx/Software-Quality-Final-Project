@@ -4,6 +4,7 @@ import com.ontariotechu.sofe3980U.core.MemoryStore;
 
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 // JUnit Imports
@@ -34,4 +35,16 @@ public class MemoryStoreTest {
 
     //TODO
 
+
+
+    //Flight List Sorting Tests (White Box Tests)
+
+    @Test
+    public void testSortingFlights1() {
+
+        List<Airport> airports = MemoryStore.getInstance().getAirportList();
+        List<Flight> flights = new ArrayList<>();
+        //TODO: flights.add(new Flight(airports.get(0), airports.get(1), new DowDate()));
+        
+    }
 }

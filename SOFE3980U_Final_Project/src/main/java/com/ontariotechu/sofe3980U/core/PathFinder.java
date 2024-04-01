@@ -7,43 +7,60 @@ import java.util.Map;
 import java.util.UUID;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.time.LocalTime;
+import java.util.UUID;
 
 public class PathFinder {
     
     // Private constructor to prevent instantiation
     private PathFinder() {}
 
+    public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
+        List<Airport> aL = MemoryStore.getInstance().getAirportList();
+        int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
+        LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
+        DowDate earliestTimeOfDay = new DowDate(dow, time0100);
 
-public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
-    
-    List<Airport> aL = MemoryStore.getInstance().getAirportList();
-    
-    Airport start = aL.get(searchDTO.getDepartureAirport());
-    Airport end = aL.get(searchDTO.getArrivalAirport());
-    
-    //Get Departure Date DOW
+        Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
+        Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
 
-    //*From 1 Monday to 7 Sunday (1: MON, 2: TUE, 3: WED, 4: THU, 5: FRI, 6: SAT, 7: SUN)
-    
-    int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue(); 
-    LocalTime time0100 = LocalTime.of(1, 0); //1:00 AM
+        List<List<Flight>> flightPathsDeparture = pathFind(start, end, earliestTimeOfDay);
+        List<Booking> bookings = new ArrayList<>();
 
-    DowDate earliestTimeOfDay =  new DowDate(dow, time0100);
+        if (searchDTO.getRoundTrip()) {
+            List<List<Flight>> flightPathsReturning = pathFind(end, start, earliestTimeOfDay);
 
-    List<List<Flight>> flightPaths = pathFind(start, end, earliestTimeOfDay);
-    List<Booking> bookings = new ArrayList<>();
+            int minSize = Math.min(flightPathsDeparture.size(), flightPathsReturning.size());
 
-    for (List<Flight> flightPath : flightPaths) {
-        // Convert List<Flight> to ArrayList<Flight>
-        ArrayList<Flight> flightPathArrayList = new ArrayList<>(flightPath);
-        
-        // Assuming Booking constructor takes ArrayList<Flight> and a String for ID
-        Booking booking = new Booking(flightPathArrayList, UUID.randomUUID().toString());
-        bookings.add(booking);
+            for (int i = 0; i < minSize; i++) 
+            {
+                //Change into an ArrayList type to create booking
+                ArrayList<Flight> departureFlights = new ArrayList<>(flightPathsDeparture.get(i));
+                ArrayList<Flight> returningFlights = new ArrayList<>(flightPathsReturning.get(i));
+
+                //Create new booking
+                Booking booking = new Booking(departureFlights, returningFlights, UUID.randomUUID().toString());
+                bookings.add(booking);
+            }
+        } else {
+            for (List<Flight> flightPath : flightPathsDeparture) 
+            {
+                //Change into an ArrayList type to create booking
+                ArrayList<Flight> departureFlights = new ArrayList<>(flightPath);
+
+                //Create new booking
+                Booking booking = new Booking(departureFlights, UUID.randomUUID().toString()); //Assuming no returning flights for one-way
+                bookings.add(booking);
+            }
+        }
+
+        sortBookings(bookings);
+        return bookings;
     }
-    return bookings;
-}
 
     // Find flight paths for a booking
     public static List<List<Flight>> pathFind(Airport start, Airport end, DowDate departAfter) {
@@ -64,7 +81,7 @@ public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
             return;
         }
 
-        List<Flight> nextFlights = getNextFlights(flightsMap, current, departAfter);
+        List<Flight> nextFlights = getNextFlights(flightsMap, currentPath, current, departAfter);
 
         for (Flight flight : nextFlights) {
             currentPath.add(flight); //add current flight to path
@@ -73,18 +90,72 @@ public static List<Booking> buildBookings(FlightSearchDTO searchDTO) {
         }
     }
 
-    private static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, Airport currentAirport, DowDate afterTime) {
+    // Find next steps in flight graph
+    public static List<Flight> getNextFlights(Map<Integer, List<Flight>> flightsMap, List<Flight> currentPath, Airport currentAirport, DowDate afterTime) {
         List<Flight> filteredFlights = new ArrayList<>();
         List<Flight> flightsList = flightsMap.get(currentAirport.getID());
+        List<Airport> visitedAirports = new ArrayList<>();
+
+        if (currentPath.size() != 0) {
+            visitedAirports.add(currentPath.get(0).getStart());
+            for (Flight flight : currentPath) {
+                visitedAirports.add(flight.getDestination());
+            }
+        }
+
         if (flightsList != null) {
             for (Flight flight : flightsList) {
                 // Only add flights departing after the specified time
-                if(flight.getDepartDate().compareTo(afterTime) > 0) {
+                // Only add flights with new airports (get rid of cycling)
+                if(flight.getDepartDate().compareTo(afterTime) >= 0 && !visitedAirports.contains(flight.getDestination())) {
                     filteredFlights.add(flight);
                 }
             }
         }
         return filteredFlights;
+    }
+
+    // Sorts bookings first by total stops, then by final arrival time; sorts the argument list and outputs the sorted list
+    private static List<Booking> sortBookings(List<Booking> bookings) {
+
+        Map<Integer, List<Booking>> bookingMap = new HashMap<Integer, List<Booking>>();
+        List<Booking> output = new ArrayList<>();
+        int totalstops = 0;
+        int maxstops = 0;
+
+        //sort bookings into hashtable based on total stops
+        for (Booking booking : bookings) {
+            totalstops = booking.getTotalStops();
+            if (bookingMap.containsKey(totalstops)) {
+                bookingMap.get(totalstops).add(booking);
+            }
+            else {
+                bookingMap.put(totalstops, new ArrayList<>());
+                bookingMap.get(totalstops).add(booking);
+                if (totalstops > maxstops) {maxstops = totalstops;}
+            }
+        }
+
+        //for each possible key in hashtable
+        for (int i = 0; i <= maxstops; i++) {
+            if (bookingMap.containsKey(i)) {
+                //sort hash table row
+                Collections.sort(bookingMap.get(i), new Comparator<Booking>() {
+                    @Override
+                    public int compare(Booking b1, Booking b2) {
+                        return b1.getFinalArrivalDate().compareTo(b2.getFinalArrivalDate());
+                    }
+                });
+                
+                //add row to output
+                for (Booking booking : bookingMap.get(i)) {
+                    output.add(booking);
+                }
+            }
+        }
+
+        bookings = output;
+        return output;
     }
     
 }

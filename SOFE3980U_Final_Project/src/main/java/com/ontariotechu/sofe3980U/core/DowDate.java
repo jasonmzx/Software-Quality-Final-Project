@@ -54,8 +54,8 @@ public class DowDate implements Comparable<DowDate>{
         else if (this.DoW < comparer.DoW) {
             return -1;
         }
-        else {
-            return 0;
+        else { //same DoW
+            return this.DayTime.compareTo(comparer.DayTime); //compare time of day
         }
     }
 }

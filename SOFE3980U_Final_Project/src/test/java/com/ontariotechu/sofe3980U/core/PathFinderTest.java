@@ -2,7 +2,9 @@ package com.ontariotechu.sofe3980U.core;
 
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 // JUnit Imports
@@ -12,10 +14,11 @@ import org.junit.Test;
 
 import com.ontariotechu.sofe3980U.booking.Booking;
 import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
-
 import com.ontariotechu.sofe3980U.core.PathFinder;
 
 public class PathFinderTest {
+
+    //TODO: MAKE BETTER TESTS
 
     @Test
     public void testPathFinder() {
@@ -27,7 +30,14 @@ public class PathFinderTest {
         searchDTO.setDepartureDate("03/25/2024");
         searchDTO.parseDep(searchDTO.getDepartureDate()); //needs to be done externally
 
-        searchDTO.setRoundTrip(false);
+        searchDTO.setRoundTrip(true);
+        Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
+        Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
+        
+        int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
+        LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
+        DowDate earliestTimeOfDay = new DowDate(dow, time0100);
+        Map<Integer, List<Flight>> flightsMap = MemoryStore.getInstance().getSortedFlights();
 
         // Generate bookings
         List<Booking> bookings = PathFinder.buildBookings(searchDTO);
@@ -55,17 +65,27 @@ public class PathFinderTest {
             System.out.println();
         }
     }
+  
+    @Test
+    public void testBuildBookings() {
+        // Test the buildBookings function
+        // This function is a placeholder and should throw an UnsupportedOperationException
+        try {
+            PathFinder.buildBookings(null);
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
 
+    @Test
+    public void testPathFind() {
+        // Test the pathFind function
+        // This function is a placeholder and should throw an UnsupportedOperationException
+        try {
+            PathFinder.pathFind(null, null, null);
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+    }
 
-
-    // @Test
-    // public void testPathFind() {
-    //     // Test the pathFind function
-    //     // This function is a placeholder and should throw an UnsupportedOperationException
-    //     try {
-    //         PathFinder.pathFind(null, null, null, null, null);
-    //     } catch (UnsupportedOperationException e) {
-    //         assertNotNull(e);
-    //     }
-    // }
 }
