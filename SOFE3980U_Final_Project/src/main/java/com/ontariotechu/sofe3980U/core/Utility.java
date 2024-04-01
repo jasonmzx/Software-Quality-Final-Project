@@ -16,13 +16,13 @@ public abstract class Utility {
 
     public static int validateRequest(FlightSearchDTO searchParameters) {
 
-    LocalDate departureDate = searchParameters.getDepartureDateParsed();
     int departureAirport = searchParameters.getDepartureAirport();
     int arrivalAirport = searchParameters.getArrivalAirport();
     boolean roundTrip = searchParameters.getRoundTrip();
-    LocalDate returnDate = searchParameters.getReturnDateParsed();
 
-        
+    LocalDate departureDate = searchParameters.getDepartureDateParsed();
+    LocalDate returnDate = searchParameters.getReturnDateParsed();
+    
         // Ensure departure and arrival airports are not the same
         if (departureAirport == arrivalAirport) {
             throw new IllegalArgumentException("Departure airport and arrival airport cannot be the same.");

@@ -75,7 +75,7 @@ public class FlightSearchDTO {
         this.departureDateParsed = Utility.parseDate(departureDate, "MM/dd/yyyy");
     }
 
-    public void parseRet(String departureDate) {
+    public void parseRet(String returnDate) {
         this.returnDateParsed = Utility.parseDate(returnDate, "MM/dd/yyyy");
     }
 

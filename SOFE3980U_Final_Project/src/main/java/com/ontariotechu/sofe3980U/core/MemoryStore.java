@@ -287,7 +287,6 @@ public class MemoryStore {
     }
 
 
-
     // -------------- Booking State Getters and Setters ---------------------------
 
     public void addBookingToBookedList(String uuid, Booking booking) {

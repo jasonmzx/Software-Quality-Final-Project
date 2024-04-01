@@ -217,7 +217,10 @@
             const parsedBookings = bookings;
 
             //Availablity Status for Bookings HTML element
-            let availStatus = document.querySelector(".avail_status");
+            let availStatus = document.querySelector(".avail_status"); //Available Bookings Status message
+            let container = document.querySelector(".avail_bookings"); //Available Bookings Container
+            container.innerHTML = "";
+
 
             if (parsedBookings.length == 0) {
                 availStatus.innerHTML = `No Bookings Found...`;
@@ -225,10 +228,9 @@
                 return;
             }
 
-            availStatus.innerHTML = `Available Bookings: (${parsedBookings.length})`;
+            //* Assertions for empty output passed, bookings exist at this point forsure
 
-            let container = document.querySelector(".avail_bookings");
-            container.innerHTML = "";
+            availStatus.innerHTML = `Available Bookings: (${parsedBookings.length})`;
 
             parsedBookings.forEach((booking, booking_IDX) => {
                 let cardMain = document.createElement("div");
