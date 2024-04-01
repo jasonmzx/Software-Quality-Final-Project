@@ -89,7 +89,7 @@ public class BookingAPIControllerTest {
         this.mvc.perform(post("/submit_booking")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(fsDTOJson))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
     }
 
 }

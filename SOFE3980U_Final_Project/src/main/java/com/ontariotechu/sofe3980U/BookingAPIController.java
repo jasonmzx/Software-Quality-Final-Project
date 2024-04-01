@@ -137,19 +137,28 @@ public class BookingAPIController {
 
         MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
         List<Booking> BBL = memoryStore.getBookingBrowseList(bookingDTO.getUserUUID());
+        
+
+
+        Boolean found = false;
 
         for (Booking booking : BBL) {
-        if(booking.getUUID().equals(bookingDTO.getBookingUUID())){
+            System.out.println("Booking UUID: [LOOP]" + booking.getUUID());
+
+        if(booking.getUUID().equals(bookingDTO.getBookingUUID())) {
 
             booking.setNameOfPassenger(bookingDTO.getUserName()); //Set passenger name
 
             memoryStore.addBookingToBookedList(bookingDTO.getUserUUID(), booking);
             System.out.println("Booking submitted successfully!");
+            
             return new ResponseEntity<>("Booking submitted successfully!", HttpStatus.OK);
         }
-        else{
-            return new ResponseEntity<>("Booking not found!", HttpStatus.BAD_REQUEST);
+
         }
+
+        if(found == false){
+            return new ResponseEntity<>("Booking not found!", HttpStatus.BAD_REQUEST);
         }
 
 
