@@ -170,12 +170,40 @@
         // Calculate total flight time in hours
 
         function calculateTotalFlightTime(booking) {
+    let totalFlightTime = 0;
 
-            return 2;
-        }
+    booking.forEach(flight => {
+        // Extract departure and arrival times
+        const departHour = flight.departDate.DayTime.hour;
+        const departMinute = flight.departDate.DayTime.minute;
+        
+        const arrivalHour = flight.arrivalDate.DayTime.hour;
+        const arrivalMinute = flight.arrivalDate.DayTime.minute;
+
+        // Calculate departure and arrival times in minutes
+        const departTimeInMinutes = departHour * 60 + departMinute;
+        const arrivalTimeInMinutes = arrivalHour * 60 + arrivalMinute;
+
+        // Calculate flight time in minutes
+        let flightTimeInMinutes = arrivalTimeInMinutes - departTimeInMinutes;
+
+        // // Adjust for day change if arrival is on the next day
+        // if (flightTimeInMinutes < 0) {
+        //     flightTimeInMinutes += 24 * 60;
+        // }
+
+        // Convert flight time back to hours
+        const flightTimeInHours = flightTimeInMinutes / 60;
+
+        // Sum up the total flight time
+        totalFlightTime += flightTimeInHours;
+    });
+
+    return totalFlightTime;
+}
+
 
         // --------------------------------------------------------------------------------------------------------------------------------
-
 
 
         // MENU BOOLEANS:
@@ -353,11 +381,28 @@
                     });
                 };
 
-                cardHeader.appendChild(bookNowBtn);
+                cardHeader.appendChild(bookNowBtn); //Append the Book Now button
 
-                // -----------------------------------------------------------
+                cardMain.appendChild(cardHeader); //Append the card header to the main card
 
-                cardMain.appendChild(cardHeader);
+                // -----------------[ CARD BODY ]--------------------
+
+
+                // Function to format flight details
+                const formatFlightDetails = (flight, prefix) => {
+
+                console.log(flight);
+
+                return `
+                <strong>Flight ${prefix}:</strong> <br>
+                <span>Departure: ${flight.start.name}</span> <br>
+                <span>Arrival: ${flight.destination.name}</span> <br>
+                <span>Departure Time: 
+                ${formatTime(timeDisplayFormatSwitch.checked, flight.departDate.DayTime.hour, flight.departDate.DayTime.minute)}</span> <br>
+                <span>Arrival Time: 
+                ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span>
+                `;
+                };
 
                 // Create card body and populate with booking details
                 let cardBody = document.createElement("div");
@@ -368,18 +413,7 @@
                 cardTitle.innerHTML = `> Outbound Flight(s):`;
                 cardBody.appendChild(cardTitle);
 
-                // Function to format flight details
-                const formatFlightDetails = (flight, prefix) => {
-                    return `
-                <strong>Flight ${prefix}:</strong> <br>
-                <span>Departure: ${flight.start.name}</span> <br>
-                <span>Arrival: ${flight.destination.name}</span> <br>
-                <span>Departure Time: 
-                    ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span> <br>
-                <span>Arrival Time: 
-                    ${formatTime(timeDisplayFormatSwitch.checked, flight.departDate.DayTime.hour, flight.departDate.DayTime.minute)}</span>
-                `;
-                };
+
 
                 // Append flight details for outbound and inbound (if exists)
                 let cardText = document.createElement("p");
@@ -389,6 +423,8 @@
 
                     cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.outBound.length - 1 ? '<hr>' : '');
                 });
+
+                console.log("--------------");
 
                 cardText.innerHTML += `<hr><strong>Total Duration:</strong> ${calculateTotalFlightTime(booking.outBound)} hours`;
 
@@ -434,13 +470,14 @@
                 }
             });
 
-            // Intercept the form submission
+            //* ---- Override the form submission with AJAX via jQuery ----
+
             $('form').submit(function (e) {
                 // Prevent the default form submission
                 e.preventDefault();
 
                 console.log("Form Submitted");
-                
+
                 const myUUID = JSON.parse(localStorage.getItem('uuid'));
                 console.log("UUID:", myUUID);
 
