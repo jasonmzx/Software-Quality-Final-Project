@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ontariotechu.sofe3980U.core.restmodels.BookingSubDTO;
 import com.ontariotechu.sofe3980U.core.restmodels.FlightSearchDTO;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,13 +44,6 @@ public class BookingAPIControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Test
-    public void add() throws Exception {
-        this.mvc.perform(get("/bookadd").param("operand1", "hello").param("operand2", "world"))// .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("helloworld"));
-    }
-
     // TODO: Write more of these search_flight tsts:
 
     @Test
@@ -72,8 +66,30 @@ public class BookingAPIControllerTest {
                 .andExpect(status().isOk());
     }
 
+
     //TODO: Test 2
 
     //TODO: so on... 
+
+    //-------------------------[ Submit Booking Tests]-------------------------//
+    @Test
+    public void test_submit_booking_1() throws Exception {
+        // Create a new FlightSearchDTO object
+        BookingSubDTO bsDTO = new BookingSubDTO();
+
+        bsDTO.setBookingUUID("1234");
+        bsDTO.setUserName("John Doe");
+        bsDTO.setUserUUID("5678");
+
+        // Convert the DTO to a JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String fsDTOJson = objectMapper.writeValueAsString(bsDTO);
+
+        // Perform the POST request
+        this.mvc.perform(post("/submit_booking")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(fsDTOJson))
+                .andExpect(status().is4xxClientError());
+    }
 
 }

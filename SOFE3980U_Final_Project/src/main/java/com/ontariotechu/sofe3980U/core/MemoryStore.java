@@ -20,19 +20,21 @@ public class MemoryStore {
     private List<Airport> airportsList;
     private List<Flight> flightNetworkList;
 
+
+    // Bookings 
+
+    private HashMap<String, List<Booking>> SESS_UUID_Browsed_bookings = new HashMap<>(); //Holds the bookings that have been browsed
+
+    private HashMap<String, List<Booking>> UUID_Booked_bookings = new HashMap<>();
+
     public Airport getAirportByID(int id) {
         for (Airport airport : airportsList) {
             if (airport.getID() == id) {
                 return airport;
             }
         }
-        System.out.println("NULL ID MOFO!: " + id);
         return null;
     }
-
-    // Bookings 
-
-    private HashMap<String, List<Booking>> bookings = new HashMap<>();
 
     private MemoryStore() { //Private Constructor, as we'll only be building this object internally
         airportsList = new ArrayList<>();
@@ -83,11 +85,11 @@ public class MemoryStore {
         LocalTime time0615 = LocalTime.of(6, 15);
         LocalTime time0930 = LocalTime.of(9, 30);
 
-        DowDate departDateSunAM = new DowDate(0,time0615);
-        DowDate arrivalDate2SunAM = new DowDate(0, time0930);
+        DowDate departDateSunAM = new DowDate(7,time0615);
+        DowDate arrivalDate2SunAM = new DowDate(7, time0930);
 
-        DowDate departDateSunPM = new DowDate(0,time1530);
-        DowDate arrivalDateSunPM = new DowDate(0, time1730);
+        DowDate departDateSunPM = new DowDate(7,time1530);
+        DowDate arrivalDateSunPM = new DowDate(7, time1730);
 
         DowDate departDateMonAM =  new DowDate(1, time0615);
         DowDate arrivalDateMonAM = new DowDate(1, time0930);
@@ -126,10 +128,10 @@ public class MemoryStore {
         DowDate arrivalDateSatPM = new DowDate(6, time1730);
 
         //TOR to NYC
-        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(1), departDateMonAM,arrivalDateMonAM));
+        flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(1), departDateSunPM,arrivalDateSunPM));
 
         //NYC to LA
-        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(2), departDateSunAM,arrivalDateSunPM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(2), departDateSunPM,arrivalDate2SunAM));
 
         //LA to NYC
         flightNetworkList.add(new Flight(getAirportByID(2), getAirportByID(1), departDateTueAM,arrivalDateTueAM));
@@ -141,7 +143,7 @@ public class MemoryStore {
         flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(3), departDateMonAM,arrivalDateMonAM));
 
         //CHI to LA
-        flightNetworkList.add(new Flight(getAirportByID(3), getAirportByID(2), departDateMonAM,arrivalDateMonPM));
+        flightNetworkList.add(new Flight(getAirportByID(3), getAirportByID(2), departDateMonPM,arrivalDateMonPM));
 
         //NYC to Dubai
         flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(8), departDateWedAM, arrivalDateWedPM));
@@ -284,30 +286,42 @@ public class MemoryStore {
         return instance;
     }
 
-    // -------------- Booking Getters and Setters ---------------------------
 
-    public void addToUUIDBookingList(String uuid, Booking booking) {
+
+    // -------------- Booking State Getters and Setters ---------------------------
+
+    public void addBookingToBookedList(String uuid, Booking booking) {
         // Check if the bookings hashmap already contains the uuid
-        if (bookings.containsKey(uuid)) {
+        if (UUID_Booked_bookings.containsKey(uuid)) {
             // Add the booking to the existing list
-            bookings.get(uuid).add(booking);
+            UUID_Booked_bookings.get(uuid).add(booking);
         } else {
             // Create a new list and add the booking to it, then put it in the hashmap
             List<Booking> newList = new ArrayList<>();
             newList.add(booking);
-            bookings.put(uuid, newList);
+            UUID_Booked_bookings.put(uuid, newList);
         }
     }
 
-    public List<Booking> getBookingsByUUID(String uuid) {
+    public List<Booking> getBookedListByUUID(String uuid) {
         // Check if the bookings hashmap contains the uuid
-        if (bookings.containsKey(uuid)) {
-            return bookings.get(uuid);
+        if (UUID_Booked_bookings.containsKey(uuid)) {
+            return UUID_Booked_bookings.get(uuid);
         } else {
             // Return an empty list or null, depending on your preference
             return new ArrayList<>();
             // Alternatively, return null if you prefer to indicate no bookings found.
         }
+    }
+
+    //* Session stuff
+
+    public void setBookingBrowseList(String sessionID, List<Booking> bookingList) {
+        SESS_UUID_Browsed_bookings.put(sessionID, bookingList);
+    }
+
+    public List<Booking> getBookingBrowseList(String sessionID) { //* get OR default built into Map !
+       return SESS_UUID_Browsed_bookings.getOrDefault(sessionID, new ArrayList<>());
     }
 
     // -------------- Getters & Setters ---------------------------

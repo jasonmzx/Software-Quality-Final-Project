@@ -6,6 +6,8 @@ import com.ontariotechu.sofe3980U.core.Utility;
 
 public class FlightSearchDTO {
 
+    private String dtoUuid;
+
     private String returnDate;
     private String departureDate;
     private Integer departureAirport;
@@ -15,7 +17,16 @@ public class FlightSearchDTO {
     private LocalDate returnDateParsed;
     private LocalDate departureDateParsed;
 
-    // Getters and Setters
+    // -------------- Getters and Setters -------------------
+
+    public String getDtoUuid() {
+        return dtoUuid;
+    }
+
+    public void setDtoUuid(String uuid) {
+        this.dtoUuid = uuid;
+    }
+
     public String getDepartureDate() {
         return departureDate;
     }
@@ -58,7 +69,8 @@ public class FlightSearchDTO {
         this.returnDate = returnDate;
     }
 
-    //-- hidden
+    // ----------------------[ Un-used DTO items ]------------------------
+
     public void parseDep(String departureDate) {
         this.departureDateParsed = Utility.parseDate(departureDate, "MM/dd/yyyy");
     }

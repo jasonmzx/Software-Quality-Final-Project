@@ -14,22 +14,27 @@
 </head>
 
 <style>
-.card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-.btn-info {
-    margin-left: auto; /* This might be optional depending on your setup */
-}
+    .btn-info {
+        margin-left: auto;
+        /* This might be optional depending on your setup */
+    }
 
+    .custom-control-input:checked~.custom-control-label::before {
+        color: #fff;
+        border-color: #dd5500;
+        background-color: #e28743;
+    }
 </style>
 
 <body>
 
     <!-- PAGE HEADER -->
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="#">SOFE 3980U | Ticket Booking Application</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -37,16 +42,31 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Bookings</a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="bookings">Bookings</a>
                 </li>
             </ul>
+            <!-- Adjusted Toggle Switches Start Here -->
+            <form class="form-inline my-2 my-lg-0">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="dateFormatSwitch">
+                    <label class="custom-control-label text-white" for="dateFormatSwitch" style="cursor: pointer;">24H
+                        Format</label>
+                </div>
+                <div class="custom-control custom-switch ml-3">
+                    <input type="checkbox" class="custom-control-input" id="directFlightsSwitch">
+                    <label class="custom-control-label text-white" for="directFlightsSwitch"
+                        style="cursor: pointer;">Prioritize Direct Flights</label>
+                </div>
+            </form>
+            <!-- Adjusted Toggle Switches End Here -->
         </div>
     </nav>
+
 
     <div class="container mt-5">
         <form th:action="@{/search_flights}" method="post">
@@ -110,7 +130,7 @@
         <h3 class="avail_status"></h3>
 
         <div class="container avail_bookings"></div>
-        
+
 
     </div>
 
@@ -124,6 +144,63 @@
 
     <script>
 
+        // Helpers:
+
+        function formatTime(isMilitaryFormat, hour, minute) {
+            let formattedTime = "";
+
+            if (isMilitaryFormat) {
+                // Format in 24-hour format
+                formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            } else {
+                // Convert to 12-hour AM/PM format
+                const suffix = hour >= 12 ? 'PM' : 'AM';
+                hour = hour % 12;
+                hour = hour ? hour : 12; // the hour '0' should be '12'
+                formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${suffix}`;
+            }
+
+            if (formattedTime.startsWith("0")) {
+                formattedTime = formattedTime.substring(1);
+            }
+
+            return formattedTime;
+        }
+
+        // Calculate total flight time in hours
+
+        function calculateTotalFlightTime(booking) {
+
+            return 2;
+        }
+
+        // --------------------------------------------------------------------------------------------------------------------------------
+
+
+
+        // MENU BOOLEANS:
+
+        // Selector for the date format switch (true for 24H format, false for 12H format)
+        const timeDisplayFormatSwitch = document.querySelector('#dateFormatSwitch');
+
+        // Selector for the direct flights switch (true for prioritizing direct flights, false otherwise)
+        const directFlightsSwitch = document.querySelector('#directFlightsSwitch');
+
+        // Log the initial states
+        console.log('Date Format 24H:', timeDisplayFormatSwitch.checked);
+        console.log('Prioritize Direct Flights:', directFlightsSwitch.checked);
+
+        // Event listener for the date format switch
+        timeDisplayFormatSwitch.addEventListener('change', () => {
+            buildBookingListing(BROWSE_BOOKINGS_OBJECT["bookings"]);
+        });
+
+        // Event listener for the direct flights switch
+        directFlightsSwitch.addEventListener('change', () => {
+            console.log('Prioritize Direct Flights:', directFlightsSwitch.checked);
+        });
+
+
         // ICON DEFINITIONS;
 
         const ICON_ONE_WAY = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="height:25px; margin-right:5px;">
@@ -134,32 +211,35 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                                   </svg>`;
 
-
-
+        let BROWSE_BOOKINGS_OBJECT = null;
 
         function buildBookingListing(bookings) {
-            const parsedBookings = JSON.parse(bookings);
+            const parsedBookings = bookings;
+
+            //Availablity Status for Bookings HTML element
+            let availStatus = document.querySelector(".avail_status");
 
             if (parsedBookings.length == 0) {
+                availStatus.innerHTML = `No Bookings Found...`;
                 console.error("No bookings found");
                 return;
             }
 
-            let availStatus = document.querySelector(".avail_status");
             availStatus.innerHTML = `Available Bookings: (${parsedBookings.length})`;
 
             let container = document.querySelector(".avail_bookings");
             container.innerHTML = "";
 
-            parsedBookings.forEach(booking => {
+            parsedBookings.forEach((booking, booking_IDX) => {
                 let cardMain = document.createElement("div");
                 cardMain.classList.add("card");
 
                 let cardHeader = document.createElement("div");
-cardHeader.classList.add("card-header");
-cardHeader.style.display = "flex"; // Use flexbox
-cardHeader.style.alignItems = "center"; // Center items vertically
-cardHeader.style.justifyContent = "space-between"; // Space between items
+                cardHeader.classList.add("card-header");
+                cardHeader.style.display = "flex"; // Use flexbox
+                cardHeader.style.alignItems = "center"; // Center items vertically
+                cardHeader.style.justifyContent = "space-between"; // Space between items
+
 
                 // Determine if it's a one-way or round trip based on the inBound array length
                 let tripType = booking.inBound.length > 0 ? 'Round Trip' : 'One Way Trip';
@@ -170,12 +250,108 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                 icon.innerHTML = iconHTML + tripType;
                 cardHeader.appendChild(icon);
 
-                //* BOOKING BUTTON HERE -------------------------------------
+                //* BOOKING Submission here HERE -------------------------------------
 
-                    let bookNowBtn = document.createElement("button");
-                    bookNowBtn.classList.add("btn", "btn-info");
-                    bookNowBtn.textContent = "Book Now";
-                    cardHeader.appendChild(bookNowBtn);
+                let bookNowBtn = document.createElement("button");
+                bookNowBtn.classList.add("btn", "btn-info");
+                bookNowBtn.textContent = "Book Now";
+
+
+                let confirmBtn = document.createElement("button");
+                confirmBtn.classList.add("btn", "btn-success");
+                confirmBtn.textContent = "Confirm Booking";
+
+                //Confirm Booking seciton
+
+                let confirmBookingSection = document.createElement("div");
+                confirmBookingSection.style.display = "flex";
+
+                let inputName = document.createElement("input");
+                inputName.id = "passengerName";
+                inputName.type = "text";
+                inputName.placeholder = "Enter Passenger Name";
+
+                //Add more bootstrap classes for this:
+                inputName.classList.add("form-control-lg");
+                inputName.style.marginRight = "10px";
+
+                confirmBookingSection.appendChild(inputName);
+                confirmBookingSection.appendChild(confirmBtn);
+
+
+                bookNowBtn.onclick = function () {
+                    if (bookNowBtn.textContent === "Book Now") { //Initiate Booking
+
+                        bookNowBtn.classList.add("btn-danger");
+                        bookNowBtn.classList.remove("btn-info");
+
+                        // Add the confirm booking section
+                        cardHeader.appendChild(confirmBookingSection);
+
+
+                        bookNowBtn.textContent = "Cancel";
+
+                    } else { //Cancel Booking
+                        bookNowBtn.classList.add("btn-info");
+                        bookNowBtn.classList.remove("btn-danger");
+
+                        cardHeader.removeChild(confirmBookingSection);
+
+                        bookNowBtn.textContent = "Book Now";
+                    }
+                }
+
+
+
+                confirmBtn.onclick = function () {
+                    let UUID = JSON.parse(localStorage.getItem('uuid'));
+
+                    const passengerName = document.getElementById("passengerName").value;
+
+                    if (passengerName.length < 1) {
+                        alert("Please enter a valid passenger name.");
+                        return;
+                    }
+
+                    let bookingDTO = {
+                        userUUID: UUID,
+                        userName: passengerName,
+                        bookingUUID: booking.uuid
+                    };
+
+                    // AJAX call to the Spring Boot controller
+                    $.ajax({
+                        type: 'POST',
+                        url: '/submit_booking', // Update this URL if your API endpoint is different
+                        contentType: 'application/json',
+                        data: JSON.stringify(bookingDTO),
+                        statusCode: {
+                            200: function (response) {
+                                // Handle 200 OK
+                                console.log('Booking Success:', response);
+
+                                cardHeader.removeChild(confirmBookingSection);
+                                bookNowBtn.textContent = "Booked for " + passengerName;
+                                bookNowBtn.classList.remove("btn-danger");
+                                bookNowBtn.classList.add("btn-secondary");
+                                bookNowBtn.disabled = true;
+
+                            },
+                            400: function (error) {
+                                // Handle 400 Bad Request
+                                console.log('Booking Error:', error);
+                                alert('Booking Error: ' + error.responseText);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle any other errors here
+                            console.log('Booking Error:', error);
+                            alert('Booking Error: ' + error);
+                        }
+                    });
+                };
+
+                cardHeader.appendChild(bookNowBtn);
 
                 // -----------------------------------------------------------
 
@@ -196,8 +372,10 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                 <strong>Flight ${prefix}:</strong> <br>
                 <span>Departure: ${flight.start.name}</span> <br>
                 <span>Arrival: ${flight.destination.name}</span> <br>
-                <span>Departure Time: ${flight.departDate.DayTime.hour}:${flight.departDate.DayTime.minute}</span> <br>
-                <span>Arrival Time: ${flight.arrivalDate.DayTime.hour}:${flight.arrivalDate.DayTime.minute}</span>
+                <span>Departure Time: 
+                    ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span> <br>
+                <span>Arrival Time: 
+                    ${formatTime(timeDisplayFormatSwitch.checked, flight.departDate.DayTime.hour, flight.departDate.DayTime.minute)}</span>
                 `;
                 };
 
@@ -206,8 +384,11 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                 cardText.classList.add("card-text");
 
                 booking.outBound.forEach((flight, index) => {
-                    cardText.innerHTML += formatFlightDetails(flight, `Leg ${index+1}`) + (index < booking.outBound.length - 1 ? '<hr>' : '');
+
+                    cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.outBound.length - 1 ? '<hr>' : '');
                 });
+
+                cardText.innerHTML += `<hr><strong>Total Duration:</strong> ${calculateTotalFlightTime(booking.outBound)} hours`;
 
                 if (booking.inBound.length > 0) {
 
@@ -219,12 +400,13 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
 
                     cardText.appendChild(cardTitleIn);
                     booking.inBound.forEach((flight, index) => {
-                        cardText.innerHTML += formatFlightDetails(flight, "Inbound") + (index < booking.inBound.length - 1 ? '<hr>' : '');
+                        cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.inBound.length - 1 ? '<hr>' : '');
                     });
                 }
 
                 // Append UUID
-                cardText.innerHTML += `<strong>Booking ID:</strong> <span>${booking.uuid}</span>`;
+                container.append(document.createElement("br"));
+                //cardText.innerHTML += `<strong>Booking ID:</strong> <span>${booking.uuid}</span>`;
 
                 cardBody.appendChild(cardText);
                 cardMain.appendChild(cardBody);
@@ -236,11 +418,6 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
 
 
 
-
-
-
-
-        // Initialize DOM elements
         let SearchFlight_ERROR_BOX = document.getElementById("searchFlightErrorMsg");
         SearchFlight_ERROR_BOX.style.visibility = "hidden";
 
@@ -260,8 +437,14 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                 // Prevent the default form submission
                 e.preventDefault();
 
+                console.log("Form Submitted");
+                
+                const myUUID = JSON.parse(localStorage.getItem('uuid'));
+                console.log("UUID:", myUUID);
+
                 // Collect form data
                 var formData = {
+                    dtoUuid: myUUID,
                     departureDate: $('#departureDate').val(),
                     departureAirport: $('#departureAirport').val(),
                     arrivalAirport: $('#arrivalAirport').val(),
@@ -269,6 +452,7 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                     returnDate: $('#roundTrip').is(':checked') ? $('#returnDate').val() : null
                 };
 
+                console.log(formData);
                 // AJAX call to the Spring Boot controller
                 $.ajax({
                     type: 'POST',
@@ -278,8 +462,17 @@ cardHeader.style.justifyContent = "space-between"; // Space between items
                     statusCode: {
                         200: function (response) {
                             // Handle 200 OK
-                            buildBookingListing(response);
-                            // Optionally hide the error box or show a success message
+
+                            BROWSE_BOOKINGS_OBJECT = JSON.parse(response);
+
+                            // build bookings to DOM
+                            buildBookingListing(BROWSE_BOOKINGS_OBJECT["bookings"]);
+
+                            // Set UUID
+                            localStorage.setItem('uuid', JSON.stringify(BROWSE_BOOKINGS_OBJECT["uuid"]));
+                            console.log('LS_UUID:', JSON.parse(localStorage.getItem('uuid')));
+
+                            // Show success message:
                             SearchFlight_ERROR_BOX.style.visibility = "visible";
                             SearchFlight_ERROR_BOX.innerHTML = "Success! Valid request, here are some flights..."
                             SearchFlight_ERROR_BOX.classList.remove("alert-danger");

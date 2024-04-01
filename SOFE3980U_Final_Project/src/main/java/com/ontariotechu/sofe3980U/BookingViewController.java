@@ -17,9 +17,16 @@ public class BookingViewController {
 
         MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst
 
-        model.addAttribute("airports", memoryStore.getAirportList()); // add "airports" attrib to view template
+        model.addAttribute("airports", memoryStore.getAirportList()); 
 
         return "booking_view";
+    }
+
+    // Basically just a view Router, all the logic (data sharing) is in the API controller
+
+    @GetMapping("/bookings")
+    public String bookings(Model model) {
+        return "tickets_view";
     }
 
 
