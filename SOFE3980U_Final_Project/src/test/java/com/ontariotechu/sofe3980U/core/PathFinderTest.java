@@ -24,13 +24,13 @@ public class PathFinderTest {
     public void testPathFinder() {
         // Create a FlightSearchDTO object
         FlightSearchDTO searchDTO = new FlightSearchDTO();
-        searchDTO.setDepartureAirport(17);
-        searchDTO.setArrivalAirport(1); 
+        searchDTO.setDepartureAirport(3);
+        searchDTO.setArrivalAirport(2); 
         
         searchDTO.setDepartureDate("03/25/2024");
         searchDTO.parseDep(searchDTO.getDepartureDate()); //needs to be done externally
 
-        searchDTO.setRoundTrip(false);
+        searchDTO.setRoundTrip(true);
         Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
         Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
         
