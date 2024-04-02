@@ -1,6 +1,6 @@
-node {
+def app
+pipeline {
   agent any
-  def app
   tools {
     maven 'maven' 
   }
