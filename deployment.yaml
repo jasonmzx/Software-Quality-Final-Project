@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: FightBooker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: FlightBooker
+  template:
+    metadata:
+      labels:
+        app: FlightBooker
+    spec:
+      containers:
+        - image: SoftwareQuality/FlightBooker
+          name: FlightBooker
+          ports:
+            - containerPort: 8080
+              name: FlightBooker

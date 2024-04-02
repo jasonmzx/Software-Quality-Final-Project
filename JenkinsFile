@@ -1,0 +1,39 @@
+pipeline {
+  agent any
+  def app
+  tools {
+    maven 'maven' 
+  }
+  stages {
+    stage ('Clone Repository') {
+        checkout scm
+    }
+    stage ('Pre-Image Test') {
+      steps {
+        sh 'mvn clean test -f ./SOFE3980U_Final_Project/pom.xml'
+      }
+    }
+    stage ("Build JAR") {
+        steps {
+            sh 'mvn package -DskipTests -f ./SOFE3980U_Final_Project/pom.xml'
+        }
+    }
+    stage ('Build Docker Image') {
+      app = docker.build("SoftwareQuality/FlightBooker")
+    }
+    stage ("Push Image") {
+        docker.withRegistry('https://softwarequalityfinalproject.azurecr.io', 'docker-registry-creds') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+    }
+    stage ('Deploy') {
+      steps {
+        kubernetesDeploy {
+            configs: './deployment.yaml',
+            kubeconfigId: 'my-kubeconfig'
+        }
+      }
+    }
+  }
+}
