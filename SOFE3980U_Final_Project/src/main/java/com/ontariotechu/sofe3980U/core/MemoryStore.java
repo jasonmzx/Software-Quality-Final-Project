@@ -86,7 +86,7 @@ public class MemoryStore {
         LocalTime time0930 = LocalTime.of(9, 30);
 
         DowDate departDateSunAM = new DowDate(7,time0615);
-        DowDate arrivalDate2SunAM = new DowDate(7, time0930);
+        DowDate arrivalDateSunAM = new DowDate(7, time0930);
 
         DowDate departDateSunPM = new DowDate(7,time1530);
         DowDate arrivalDateSunPM = new DowDate(7, time1730);
@@ -131,7 +131,7 @@ public class MemoryStore {
         flightNetworkList.add(new Flight(getAirportByID(5), getAirportByID(1), departDateSunPM,arrivalDateSunPM));
 
         //NYC to LA
-        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(2), departDateSunPM,arrivalDate2SunAM));
+        flightNetworkList.add(new Flight(getAirportByID(1), getAirportByID(2), departDateSunPM,arrivalDateSunAM));
 
         //LA to NYC
         flightNetworkList.add(new Flight(getAirportByID(2), getAirportByID(1), departDateTueAM,arrivalDateTueAM));

@@ -33,7 +33,7 @@ public class PathFinderTest {
         searchDTO.setRoundTrip(true);
         Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
         Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
-        
+
         int dow = searchDTO.getDepartureDateParsed().getDayOfWeek().getValue();
         LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
         DowDate earliestTimeOfDay = new DowDate(dow, time0100);
@@ -68,24 +68,31 @@ public class PathFinderTest {
   
     @Test
     public void testBuildBookings() {
+
+        FlightSearchDTO searchDTO = new FlightSearchDTO();
+        searchDTO.setDepartureAirport(4);
+        searchDTO.setArrivalAirport(3);
+        searchDTO.setDepartureDate("04/02/2024");
+        searchDTO.parseDep(searchDTO.getDepartureDate());
+        Airport start = MemoryStore.getInstance().getAirportByID(searchDTO.getDepartureAirport());
+        Airport end = MemoryStore.getInstance().getAirportByID(searchDTO.getArrivalAirport());
+        searchDTO.setRoundTrip(false);
         // Test the buildBookings function
-        // This function is a placeholder and should throw an UnsupportedOperationException
-        try {
-            PathFinder.buildBookings(null);
-        } catch (Exception e) {
-            assertNotNull(e);
-        }
+        List<Booking> test = PathFinder.buildBookings(searchDTO);
+        assertNotNull(test);
+
     }
 
     @Test
     public void testPathFind() {
         // Test the pathFind function
+        Airport start = MemoryStore.getInstance().getAirportByID(1);
+        Airport end = MemoryStore.getInstance().getAirportByID(2);
+        LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
+        DowDate timeOfDay = new DowDate(1, time0100);
         // This function is a placeholder and should throw an UnsupportedOperationException
-        try {
-            PathFinder.pathFind(null, null, null);
-        } catch (Exception e) {
-            assertNotNull(e);
-        }
+        List<List<Flight>> test = PathFinder.pathFind(start, end, timeOfDay);
+        assertNotNull(test);
     }
 
 }

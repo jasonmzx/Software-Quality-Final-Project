@@ -66,8 +66,25 @@ public class BookingAPIControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void test_search_flight_2() throws Exception {
+        // Create a new FlightSearchDTO object
+        FlightSearchDTO fsDTO = new FlightSearchDTO();
+        fsDTO.setDepartureAirport(2);
+        fsDTO.setDepartureDate("01/01/2024");
+        fsDTO.setRoundTrip(false);
+        fsDTO.setArrivalAirport(1);
 
-    //TODO: Test 2
+        // Convert the DTO to a JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String fsDTOJson = objectMapper.writeValueAsString(fsDTO);
+
+        // Perform the POST request
+        this.mvc.perform(post("/search_flights")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(fsDTOJson))
+                .andExpect(status().isOk());
+    }
 
     //TODO: so on... 
 

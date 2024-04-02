@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 
 // JUnit Imports
 
@@ -44,6 +45,8 @@ public class MemoryStoreTest {
 
         List<Airport> airports = MemoryStore.getInstance().getAirportList();
         List<Flight> flights = new ArrayList<>();
+        Map<Integer, List<Flight>> test = MemoryStore.getInstance().getSortedFlights();
+        assertNotNull(test);
         //TODO: flights.add(new Flight(airports.get(0), airports.get(1), new DowDate()));
         
     }
