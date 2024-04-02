@@ -29,7 +29,7 @@ pipeline {
             }
         }
     }
-    stage ("Push Image") {
+    /*stage ("Push Image") {
         steps {
             script {
                 docker.withRegistry('https://softwarequalityfinalproject.azurecr.io', 'docker-registry-creds') {
@@ -46,6 +46,6 @@ pipeline {
             kubeconfigId: 'my-kubeconfig'
         )
       }
-    }
+    }*/
   }
 }
