@@ -218,6 +218,21 @@
         `;
         };
 
+
+        // PRIORITIZE DIRECT FLIGHTS HELPER:
+        // SORTED BY: Total num of Inbound and Outbound flights
+
+        function sortBookingsByTotalFlights(bookingsArray) {
+            return bookingsArray.sort((a, b) => {
+                // Calculate total flights for booking 'a'
+                const totalFlightsA = (a.inBound ? a.inBound.length : 0) + (a.outBound ? a.outBound.length : 0);
+                // Calculate total flights for booking 'b'
+                const totalFlightsB = (b.inBound ? b.inBound.length : 0) + (b.outBound ? b.outBound.length : 0);
+                // Compare the totals to determine the sort order
+                return totalFlightsA - totalFlightsB;
+            });
+        }
+
         // --------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -240,7 +255,15 @@
 
         // Event listener for the direct flights switch
         directFlightsSwitch.addEventListener('change', () => {
-            console.log('Prioritize Direct Flights:', directFlightsSwitch.checked);
+
+            if(directFlightsSwitch.checked) {
+                const bookings = sortBookingsByTotalFlights([...BROWSE_BOOKINGS_OBJECT["bookings"]]);
+                buildBookingListing(bookings);
+            } else {
+                buildBookingListing(BROWSE_BOOKINGS_OBJECT["bookings"]);
+            }
+            
+            console.log('Prioritize Direct Flights Switch:', directFlightsSwitch.checked);
         });
 
 
@@ -441,6 +464,8 @@
                     booking.inBound.forEach((flight, index) => {
                         cardText.innerHTML += formatFlightDetails(flight, `Leg ${index + 1}`) + (index < booking.inBound.length - 1 ? '<hr>' : '');
                     });
+
+                    cardText.innerHTML += `<hr><strong>Total Duration:</strong> ${calculateTotalFlightTime(booking.inBound)} hours`;
                 }
 
                 // Append UUID
