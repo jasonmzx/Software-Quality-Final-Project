@@ -29,10 +29,10 @@ pipeline {
     }
     stage ('Deploy') {
       steps {
-        kubernetesDeploy {
+        kubernetesDeploy (
             configs: './deployment.yaml',
             kubeconfigId: 'my-kubeconfig'
-        }
+        )
       }
     }
   }
