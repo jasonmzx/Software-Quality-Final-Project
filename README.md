@@ -10,6 +10,6 @@
 
 ---
 
-Run Dev-Mode Application: `mvn test spring-boot:run`
+Run Maven Tests & Deploy Spring Web App: `mvn test spring-boot:run`
 
 
