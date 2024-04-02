@@ -22,14 +22,18 @@ pipeline {
     }
     stage ('Build Docker Image') {
         steps {
-            app = docker.build("SoftwareQuality/FlightBooker")
+            script {
+                app = docker.build("SoftwareQuality/FlightBooker")
+            }
         }
     }
     stage ("Push Image") {
         steps {
-            docker.withRegistry('https://softwarequalityfinalproject.azurecr.io', 'docker-registry-creds') {
-                app.push("${env.BUILD_NUMBER}")
-                app.push("latest")
+            script {
+                docker.withRegistry('https://softwarequalityfinalproject.azurecr.io', 'docker-registry-creds') {
+                    app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
+                }
             }
         }
     }
