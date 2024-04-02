@@ -21,7 +21,7 @@ pipeline {
             sh 'mvn package -DskipTests -f ./SOFE3980U_Final_Project/pom.xml'
         }
     }
-    stage ('Build Docker Image') {
+    /*stage ('Build Docker Image') {
         steps {
             sh 'cp ./SOFE3980U_Final_Project/Dockerfile "/var/jenkins_home/workspace/Final Project Pipeline/Dockerfile"'
             script {
