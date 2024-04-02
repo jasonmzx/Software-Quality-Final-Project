@@ -1,4 +1,4 @@
-# SOFE 3980U | Software Quality Final Project
+# SOFE 3980U | Software Quality Final Project (grp. 2)
 
 **Group Members:**
 
