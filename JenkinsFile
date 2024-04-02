@@ -23,7 +23,7 @@ pipeline {
     }
     stage ('Build Docker Image') {
         steps {
-            sh 'cp ./DockerFile /var/jenkins_home/workspace/Final Project Pipeline/Dockerfile'
+            sh 'cp ./DockerFile "/var/jenkins_home/workspace/Final Project Pipeline/Dockerfile"'
             script {
                 app = docker.build("softwarequality/flightbooker")
             }
