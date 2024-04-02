@@ -1,5 +1,7 @@
 package com.ontariotechu.sofe3980U.booking;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import com.ontariotechu.sofe3980U.core.DowDate;
@@ -10,6 +12,10 @@ public class Booking {
     ArrayList<Flight> outBound = new ArrayList<Flight>(); //first half
     String NameOfPassenger;
     String UUID;
+
+    // For Display purposes on UI
+    String verboseInDateStr;
+    String verboseOutDateStr;
 
     // Default constructor needed for JSON deserialization
     public Booking() {
@@ -98,4 +104,45 @@ public class Booking {
     public DowDate getFirstDepartureDate() {
         return outBound.get(0).getDepartDate();
     }
+
+    // ------------ Date Formatting & Variable JSON handles --------------
+
+    private String formatDateVerbose(LocalDate date) {
+        String pattern = "MMMM d'%s', yyyy";
+        int day = date.getDayOfMonth();
+        String suffix = getDayOfMonthSuffix(day);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(String.format(pattern, suffix));
+        return date.format(formatter);
+    }
+
+    private String getDayOfMonthSuffix(final int n) {
+        if (n >= 11 && n <= 13) {
+            return "th";
+        }
+        switch (n % 10) {
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
+            default: return "th";
+        }
+    }
+
+    //getters and setters for verbose date strings
+
+    public String getVerboseInDateStr() {
+        return verboseInDateStr;
+    }
+
+    public void setVerboseInDateStr(LocalDate dateIn) {
+        this.verboseInDateStr = formatDateVerbose(dateIn);
+    }
+
+    public String getVerboseOutDateStr() {
+        return verboseOutDateStr;
+    }
+
+    public void setVerboseOutDateStr(LocalDate dateOut) {
+        this.verboseOutDateStr = formatDateVerbose(dateOut);
+    }
+
 }

@@ -76,6 +76,17 @@ public class BookingAPIController {
 
         List<Booking> bookingListA = PathFinder.buildBookings(searchParameters);
 
+        // Monkey Patching for adding pretty dates on bookings
+        for (Booking booking : bookingListA) {
+            
+            booking.setVerboseOutDateStr(searchParameters.getDepartureDateParsed());
+
+            if (searchParameters.getRoundTrip()) {
+                booking.setVerboseInDateStr(searchParameters.getReturnDateParsed());
+            }
+
+        }
+
         // >>>>>>>> Session Wrapping for JSON and UUID
 
         MemoryStore memoryStore = MemoryStore.getInstance(); // get singleton inst

@@ -37,4 +37,11 @@ public class BookingViewControllerTest {
             .andExpect(view().name("booking_view"));
     }
 
+    @Test
+    public void getBooking() throws Exception {
+        this.mvc.perform(get("/bookings"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("tickets_view"));
+    }
+
 }

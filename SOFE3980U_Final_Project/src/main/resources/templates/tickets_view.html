@@ -113,9 +113,55 @@
 
 
         function calculateTotalFlightTime(booking) {
+            let totalFlightTime = 0;
 
-return 2;
-}
+            booking.forEach(flight => {
+                // Extract departure and arrival times
+                const departHour = flight.departDate.DayTime.hour;
+                const departMinute = flight.departDate.DayTime.minute;
+
+                const arrivalHour = flight.arrivalDate.DayTime.hour;
+                const arrivalMinute = flight.arrivalDate.DayTime.minute;
+
+                // Calculate departure and arrival times in minutes
+                const departTimeInMinutes = departHour * 60 + departMinute;
+                const arrivalTimeInMinutes = arrivalHour * 60 + arrivalMinute;
+
+                // Calculate flight time in minutes
+                let flightTimeInMinutes = arrivalTimeInMinutes - departTimeInMinutes;
+
+                // // Adjust for day change if arrival is on the next day
+                // if (flightTimeInMinutes < 0) {
+                //     flightTimeInMinutes += 24 * 60;
+                // }
+
+                // Convert flight time back to hours
+                const flightTimeInHours = flightTimeInMinutes / 60;
+
+                // Sum up the total flight time
+                totalFlightTime += flightTimeInHours;
+            });
+
+            return totalFlightTime;
+        }
+
+        // Function to format flight details
+        const formatFlightDetails = (flight, prefix) => {
+
+            console.log(flight);
+
+            return `
+            <strong>Flight ${prefix}:</strong> <br>
+            <span>Departure: ${flight.start.name}</span> <br>
+            <span>Arrival: ${flight.destination.name}</span> <br>
+            <span>Departure Time: 
+            ${formatTime(timeDisplayFormatSwitch.checked, flight.departDate.DayTime.hour, flight.departDate.DayTime.minute)}</span> <br>
+            <span>Arrival Time: 
+            ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span>
+            `;
+            };
+
+
         //-----------------------------------------------------------------------------------
 
         // MENU BOOLEANS:
@@ -193,7 +239,6 @@ return 2;
 
                 cardHeader.appendChild(bookNowBtn);
 
-                // -----------------------------------------------------------
 
                 cardMain.appendChild(cardHeader);
 
@@ -203,21 +248,10 @@ return 2;
 
                 let cardTitle = document.createElement("h4");
                 cardTitle.classList.add("card-title");
-                cardTitle.innerHTML = `> Outbound Flight(s):`;
+                cardTitle.innerHTML = `> Outbound Flight(s): ${booking.verboseOutDateStr}`;
                 cardBody.appendChild(cardTitle);
 
-                // Function to format flight details
-                const formatFlightDetails = (flight, prefix) => {
-                    return `
-                <strong>Flight ${prefix}:</strong> <br>
-                <span>Departure: ${flight.start.name}</span> <br>
-                <span>Arrival: ${flight.destination.name}</span> <br>
-                <span>Departure Time: 
-                    ${formatTime(timeDisplayFormatSwitch.checked, flight.arrivalDate.DayTime.hour, flight.arrivalDate.DayTime.minute)}</span> <br>
-                <span>Arrival Time: 
-                    ${formatTime(timeDisplayFormatSwitch.checked, flight.departDate.DayTime.hour, flight.departDate.DayTime.minute)}</span>
-                `;
-                };
+
 
                 // Append flight details for outbound and inbound (if exists)
                 let cardText = document.createElement("p");
@@ -234,7 +268,7 @@ return 2;
 
                     let cardTitleIn = document.createElement("h4");
                     cardTitleIn.classList.add("card-title");
-                    cardTitleIn.innerHTML = `< Inbound Flight(s):`;
+                    cardTitleIn.innerHTML = `< Inbound Flight(s): ${booking.verboseInDateStr}`;
 
                     cardText.innerHTML += '<hr>';
 
