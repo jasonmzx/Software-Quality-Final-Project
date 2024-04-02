@@ -18,8 +18,6 @@ import com.ontariotechu.sofe3980U.core.PathFinder;
 
 public class PathFinderTest {
 
-    //TODO: MAKE BETTER TESTS
-
     @Test
     public void testPathFinder() {
         // Create a FlightSearchDTO object
@@ -90,7 +88,6 @@ public class PathFinderTest {
         Airport end = MemoryStore.getInstance().getAirportByID(2);
         LocalTime time0100 = LocalTime.of(1, 0); // 1:00 AM
         DowDate timeOfDay = new DowDate(1, time0100);
-        // This function is a placeholder and should throw an UnsupportedOperationException
         List<List<Flight>> test = PathFinder.pathFind(start, end, timeOfDay);
         assertNotNull(test);
     }

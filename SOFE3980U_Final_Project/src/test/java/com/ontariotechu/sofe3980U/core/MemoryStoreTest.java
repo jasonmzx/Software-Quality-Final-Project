@@ -32,10 +32,12 @@ public class MemoryStoreTest {
     }
 
     //Flight Network Tests (Data Integrity Tests)
-
-
-    //TODO
-
+    @Test
+    public void testFlightNetwork() {
+        List<Flight> flights = MemoryStore.getInstance().getFlightsList();
+        assertNotNull(flights);
+        assertFalse(flights.isEmpty());
+    }
 
 
     //Flight List Sorting Tests (White Box Tests)
@@ -47,7 +49,11 @@ public class MemoryStoreTest {
         List<Flight> flights = new ArrayList<>();
         Map<Integer, List<Flight>> test = MemoryStore.getInstance().getSortedFlights();
         assertNotNull(test);
-        //TODO: flights.add(new Flight(airports.get(0), airports.get(1), new DowDate()));
         
+    }
+
+    public void testAirportByID() {
+        Airport airport = MemoryStore.getInstance().getAirportByID(1);
+        assertTrue(airport.getName() == "JFK - John F. Kennedy International Airport");
     }
 }

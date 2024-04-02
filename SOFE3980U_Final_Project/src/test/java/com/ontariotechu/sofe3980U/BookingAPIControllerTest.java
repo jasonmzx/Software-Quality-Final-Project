@@ -44,7 +44,6 @@ public class BookingAPIControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    // TODO: Write more of these search_flight tsts:
 
     @Test
     public void test_search_flight_1() throws Exception {
@@ -86,7 +85,6 @@ public class BookingAPIControllerTest {
                 .andExpect(status().isOk());
     }
 
-    //TODO: so on... 
 
     //-------------------------[ Submit Booking Tests]-------------------------//
     @Test
